@@ -7,6 +7,7 @@ import {
 
 import SignIn from './components/SignIn'
 import Home from './components/Home'
+import TestDemo from './components/TestDemo'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route index path="/" element={<Home />} />
           <Route path='/signin' element={<SignIn />} />
+          {/* <Route path='/test' element={<TestDemo />} /> */}
         </Routes>
       </Router>
     </div>
