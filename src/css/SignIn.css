@@ -1,0 +1,35 @@
+.background {
+  height: 100vh;
+  width: 100vw;
+  background: radial-gradient( hsl(174, 63%, 40%), hsl(174, 63%, 26%));
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.card {
+  margin: auto;
+  height: 40%;
+}
+
+.card h1 {
+  font-size: 5rem;
+  font-family: 'Vidaloka', serif;
+  color: hsl(174, 53%, 70%);
+  font-weight: normal;
+  line-height: 72px;
+  letter-spacing: -1px;
+  text-align: center;
+  text-shadow: -1px -1px hsl(174deg 53% 30%), 1px 1px hsl(174deg 53% 90%);
+}
+
+.card button {
+  background: white;
+  color: #777;
+  border: 0;
+}
+.card button:hover {
+  border: 0;
+  background: #8ADBD3;
+  color: white;
+}
+

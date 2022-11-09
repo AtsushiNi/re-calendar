@@ -1,0 +1,40 @@
+header {
+  background-color: #26A69A;
+  width: 100vw;
+  height: 80px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+}
+
+.header-inner {
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: inherit;
+}
+
+header h1 {
+  color: white;
+  font-size: 30px;
+  font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  line-height: 1.75;
+  font-weight: bold;
+}
+
+header nav {
+  display: flex;
+  margin-right: 50px;
+}
+
+header ul {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  font-size: 20px;
+  font-weight: bold;
+  list-style: none;
+}

@@ -1,4 +1,6 @@
+import '../css/SignIn.css'
 import Button from '@mui/material/Button'
+import GoogleIcon from '@mui/icons-material/Google';
 import { useNavigate } from 'react-router-dom'
 import { getAuth, signInWithPopup } from 'firebase/auth'
 import { provider } from '../context/AuthContext'
@@ -17,9 +19,11 @@ const SignIn = () => {
   }
 
   return (
-    <div>
-      <h1>SignIn</h1>
-      <Button variant="outlined" onClick={handleSignin}>SignIn</Button>
+    <div className="background">
+      <div className="card">
+        <h1>Re-Calender</h1>
+        <Button variant="outlined" startIcon={<GoogleIcon />} onClick={handleSignin}>Sign in with Google</Button>
+      </div>
     </div>
   )
 }
