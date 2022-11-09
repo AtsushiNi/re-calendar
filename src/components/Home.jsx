@@ -27,7 +27,7 @@ const Home = () => {
       <header>
         <div className="header-inner">
           <a>
-            <h1>Re-Calender</h1>
+            <h1>Re-Calendar</h1>
           </a>
           <nav>
             <ul>

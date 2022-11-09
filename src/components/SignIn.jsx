@@ -21,7 +21,7 @@ const SignIn = () => {
   return (
     <div className="background">
       <div className="card">
-        <h1>Re-Calender</h1>
+        <h1>Re-Calendar</h1>
         <Button variant="outlined" startIcon={<GoogleIcon />} onClick={handleSignin}>Sign in with Google</Button>
       </div>
     </div>
