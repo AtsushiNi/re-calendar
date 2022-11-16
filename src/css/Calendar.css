@@ -315,6 +315,55 @@ h2.header-day-content {
   margin-top: 1px;
   outline: none;
 }
+.event::after {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  content: "";
+  box-sizing: border-box;
+  border-radius: 5px;
+  pointer-events: none;
+  border: 1px solid #fff;
+}
+#event-1 {
+  top: 455px;
+  height: 46px;
+  left: calc((100% - 0px) * 0 + 0px);
+  width: calc((100% - 0px) * 0.566667);
+  z-index: 5;
+}
+#event-2 {
+  top: 455px;
+  height: 34px;
+  left: calc((100% - 0px) * 0.333333 + 0px);
+  width: calc((100% - 0px) * 0.566667);
+  z-index: 6;
+}
+#event-3 {
+  top: 479px;
+  height: 94px;
+  left: calc((100% - 0px) * 0.666667 + 0px);
+  width: calc((100% - 0px) * 0.333333);
+  z-index: 7;
+}
+#event-4 {
+  top: 503px;
+  height: 46px;
+  left: calc((100% - 0px) * 0 + 0px);
+  width: calc((100% - 0px) * 1);
+  z-index: 5;
+}
+
+.event-content-wrapper {
+  max-height: 100%;
+  overflow: hidden;
+  padding-left: 8px;
+  text-align: left;
+  display: flex;
+  user-select: none;
+}
 
 .event-content {
   color: #fff;

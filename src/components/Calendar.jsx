@@ -162,7 +162,7 @@ const Calendar = () => {
                     <div role="presentation" className="events">
                       <div role="button" className="event">
                         <div></div>
-                        <div>
+                        <div className="event-content-wrapper">
                           <div className="event-content">
                             <div className="event-title">
                               <span className="event-title-span">
@@ -187,7 +187,7 @@ const Calendar = () => {
                     <div role="presentation" className="events">
                       <div role="button" className="event">
                         <div></div>
-                        <div>
+                        <div className="event-content-wrapper">
                           <div className="event-content">
                             <div className="event-title">
                               <span>
@@ -206,7 +206,7 @@ const Calendar = () => {
                       </div>
                       <div role="button" className="event">
                         <div></div>
-                        <div>
+                        <div className="event-content-wrapper">
                           <div className="event-content">
                             <div className="event-title">
                               <span>
@@ -228,7 +228,84 @@ const Calendar = () => {
                   <div role="gridcell" className="day-column">
                     <h2></h2>
                     <div></div>
-                    <div role="presentation" className="events"></div>
+                    <div role="presentation" className="events">
+                      <div role="button" className="event" id="event-1">
+                        <div></div>
+                        <div className="event-content-wrapper">
+                          <div className="event-content">
+                            <div className="event-title">
+                              <span>
+                                <span>
+                                  機械システム学セミナー
+                                </span>
+                              </span>
+                            </div>
+                            <div className="event-time">
+                              午前9:30~11:30
+                            </div>
+                            <div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div role="button" className="event" id="event-2">
+                        <div></div>
+                        <div className="event-content-wrapper">
+                          <div className="event-content">
+                            <div className="event-title">
+                              <span>
+                                <span>
+                                  機械システム学セミナー
+                                </span>
+                              </span>
+                            </div>
+                            <div className="event-time">
+                              午前9:30~11:30
+                            </div>
+                            <div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div role="button" className="event" id="event-3">
+                        <div></div>
+                        <div className="event-content-wrapper">
+                          <div className="event-content">
+                            <div className="event-title">
+                              <span>
+                                <span>
+                                  機械システム学セミナー
+                                </span>
+                              </span>
+                            </div>
+                            <div className="event-time">
+                              午前9:30~11:30
+                            </div>
+                            <div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div role="button" className="event" id="event-4">
+                        <div></div>
+                        <div className="event-content-wrapper">
+                          <div className="event-content">
+                            <div className="event-title">
+                              <span>
+                                <span>
+                                  機械システム学セミナー
+                                </span>
+                              </span>
+                            </div>
+                            <div className="event-time">
+                              午前9:30~11:30
+                            </div>
+                            <div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div role="gridcell" className="day-column">
                     <h2></h2>
