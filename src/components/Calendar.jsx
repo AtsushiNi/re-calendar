@@ -23,70 +23,70 @@ const Calendar = () => {
         sideColumn.scrollTop(scrollWindow.scrollTop())
       })
     }
-  })
+  }, [])
 
   return (
     <div role="main">
       <h1 style={{display: "none"}}>xx年xx月xx日の週、xx件の予定</h1>
       <div>
-        <div role="grid" class="calendar-grid">
-          <div role="presentation" class="calendar-headers">
-            <div class="header-spacer">
+        <div role="grid" className="calendar-grid">
+          <div role="presentation" className="calendar-headers">
+            <div className="header-spacer">
               <div></div>
               <div></div>
             </div>
-            <div role="presentation" class="header-days-wrapper">
+            <div role="presentation" className="header-days-wrapper">
               <div></div>
-              <div role="row" class="header-days-row-wrapper">
-                <div role="presentation" class="header-days">
+              <div role="row" className="header-days-row-wrapper">
+                <div role="presentation" className="header-days" key="1">
                   <div className="header-days-spacer"></div>
-                  <div role="columnheader" class="header-day">
+                  <div role="columnheader" className="header-day">
                     <div className="header-day-border"></div>
-                    <h2 class="header-day-content">
-                      <div class="day-week">日</div>
-                      <div class="day-number">13</div>
+                    <h2 className="header-day-content">
+                      <div className="day-week">日</div>
+                      <div className="day-number">13</div>
                     </h2>
                   </div>
-                  <div role="columnheader" class="header-day">
+                  <div role="columnheader" className="header-day" key="2">
                     <div className="header-day-border"></div>
-                    <h2 class="header-day-content">
-                      <div class="day-week">月</div>
-                      <div class="day-number">14</div>
+                    <h2 className="header-day-content">
+                      <div className="day-week">月</div>
+                      <div className="day-number">14</div>
                     </h2>
                   </div>
-                  <div role="columnheader" class="header-day">
+                  <div role="columnheader" className="header-day" key="3">
                     <div className="header-day-border"></div>
-                    <h2 class="header-day-content">
-                      <div class="day-week">火</div>
-                      <div class="day-number">15</div>
+                    <h2 className="header-day-content">
+                      <div className="day-week">火</div>
+                      <div className="day-number">15</div>
                     </h2>
                   </div>
-                  <div role="columnheader" class="header-day">
+                  <div role="columnheader" className="header-day" key="4">
                     <div className="header-day-border"></div>
-                    <h2 class="header-day-content">
-                      <div class="day-week">水</div>
-                      <div class="day-number">16</div>
+                    <h2 className="header-day-content">
+                      <div className="day-week">水</div>
+                      <div className="day-number">16</div>
                     </h2>
                   </div>
-                  <div role="columnheader" class="header-day">
+                  <div role="columnheader" className="header-day" key="5">
                     <div className="header-day-border"></div>
-                    <h2 class="header-day-content">
-                      <div class="day-week">木</div>
-                      <div class="day-number">17</div>
+                    <h2 className="header-day-content">
+                      <div className="day-week">木</div>
+                      <div className="day-number">17</div>
                     </h2>
                   </div>
-                  <div role="columnheader" class="header-day">
+                  <div role="columnheader" className="header-day" key="6">
                     <div className="header-day-border"></div>
-                    <h2 class="header-day-content">
-                      <div class="day-week">金</div>
-                      <div class="day-number">18</div>
+                    <h2 className="header-day-content">
+                      <div className="day-week">金</div>
+                      <div className="day-number">18</div>
                     </h2>
                   </div>
-                  <div role="columnheader" class="header-day">
+                  <div role="columnheader" className="header-day">
                     <div className="header-day-border"></div>
-                    <h2 class="header-day-content">
-                      <div class="day-week">土</div>
-                      <div class="day-number">19</div>
+                    <h2 className="header-day-content">
+                      <div className="day-week">土</div>
+                      <div className="day-number">19</div>
                     </h2>
                   </div>
                 </div>
@@ -97,9 +97,9 @@ const Calendar = () => {
                   <div></div>
                   <div className="header-spacer-cells">
                     {
-                      [...Array(7)].map(() => (
-                        <div tabindex="-1" class="header-spacer-cell">
-                          <div role="button" class="header-spacer-cell-content">
+                      [...Array(7)].map((_, key) => (
+                        <div tabIndex="-1" className="header-spacer-cell" key={key}>
+                          <div role="button" className="header-spacer-cell-content">
                           </div>
                         </div>
                       ))
@@ -113,15 +113,15 @@ const Calendar = () => {
                 <div>
                   <ul>
                     {
-                      [...Array(7)].map(() => (
-                        <li className="long-event-box-li"></li>
+                      [...Array(7)].map((_, key) => (
+                        <li className="long-event-box-li" key={key}></li>
                       ))
                     }
                   </ul>
                   <div className="long-event-boxes-div">
                     {
-                      [...Array(7)].map(() => (
-                        <div className="long-event-box-div"></div>
+                      [...Array(7)].map((_, key) => (
+                        <div className="long-event-box-div" key={key}></div>
                       ))
                     }
                   </div>
@@ -135,8 +135,8 @@ const Calendar = () => {
               <div className="side-column">
                 <div className="side-time-list">
                   {
-                    [...Array(24)].map(() => (
-                      <div className="side-time">
+                    [...Array(24)].map((_, key) => (
+                      <div className="side-time" key={key}>
                         <span>午前10時</span>
                       </div>
                     ))
@@ -145,33 +145,33 @@ const Calendar = () => {
               </div>
               <div role="presentation" className="scroll-window">
                 <div role="row" className="day-columns">
-                  <div class="h-borders">
+                  <div className="h-borders">
                     {
-                      [...Array(24)].map(() => (<div class="gap-cell"></div>))
+                      [...Array(24)].map((_, key) => (<div className="gap-cell" key={key}></div>))
                     }
                   </div>
                   <div className="day-column-2"></div>
-                  <div role="gridcell" class="day-column">
+                  <div role="gridcell" className="day-column">
                     <h2></h2>
                     <div></div>
                     <div role="presentation" className="events"></div>
                   </div>
-                  <div role="gridcell" class="day-column">
+                  <div role="gridcell" className="day-column">
                     <h2></h2>
                     <div></div>
                     <div role="presentation" className="events">
-                      <div role="button" class="event">
+                      <div role="button" className="event">
                         <div></div>
                         <div>
-                          <div class="event-content">
-                            <div class="event-title">
-                              <span class="event-title-span">
+                          <div className="event-content">
+                            <div className="event-title">
+                              <span className="event-title-span">
                                 <span>
                                   機械システム学セミナー
                                 </span>
                               </span>
                             </div>
-                            <div class="event-time">
+                            <div className="event-time">
                               午前9:30~11:30
                             </div>
                             <div>
@@ -181,22 +181,22 @@ const Calendar = () => {
                       </div>
                     </div>
                   </div>
-                  <div role="gridcell" class="day-column">
+                  <div role="gridcell" className="day-column">
                     <h2></h2>
                     <div></div>
                     <div role="presentation" className="events">
-                      <div role="button" class="event">
+                      <div role="button" className="event">
                         <div></div>
                         <div>
-                          <div class="event-content">
-                            <div class="event-title">
+                          <div className="event-content">
+                            <div className="event-title">
                               <span>
                                 <span>
                                   機械システム学セミナー
                                 </span>
                               </span>
                             </div>
-                            <div class="event-time">
+                            <div className="event-time">
                               午前9:30~11:30
                             </div>
                             <div>
@@ -204,18 +204,18 @@ const Calendar = () => {
                           </div>
                         </div>
                       </div>
-                      <div role="button" class="event">
+                      <div role="button" className="event">
                         <div></div>
                         <div>
-                          <div class="event-content">
-                            <div class="event-title">
+                          <div className="event-content">
+                            <div className="event-title">
                               <span>
                                 <span>
                                   機械システム学セミナー
                                 </span>
                               </span>
                             </div>
-                            <div class="event-time">
+                            <div className="event-time">
                               午前9:30~11:30
                             </div>
                             <div>
@@ -225,22 +225,22 @@ const Calendar = () => {
                       </div>
                     </div>
                   </div>
-                  <div role="gridcell" class="day-column">
+                  <div role="gridcell" className="day-column">
                     <h2></h2>
                     <div></div>
                     <div role="presentation" className="events"></div>
                   </div>
-                  <div role="gridcell" class="day-column">
+                  <div role="gridcell" className="day-column">
                     <h2></h2>
                     <div></div>
                     <div role="presentation" className="events"></div>
                   </div>
-                  <div role="gridcell" class="day-column">
+                  <div role="gridcell" className="day-column">
                     <h2></h2>
                     <div></div>
                     <div role="presentation" className="events"></div>
                   </div>
-                  <div role="gridcell" class="day-column">
+                  <div role="gridcell" className="day-column">
                     <h2></h2>
                     <div></div>
                     <div role="presentation" className="events"></div>
