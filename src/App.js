@@ -7,6 +7,7 @@ import {
 
 import SignIn from './components/SignIn'
 import Home from './components/Home'
+import Calendar from './components/Calendar'
 import TestDemo from './components/TestDemo'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route index path="/" element={<Home />} />
           <Route path='/signin' element={<SignIn />} />
+          <Route path="/calendar" element={<Calendar />} />
           {/* <Route path='/test' element={<TestDemo />} /> */}
         </Routes>
       </Router>
