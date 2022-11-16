@@ -1,7 +1,38 @@
 import { useEffect } from 'react'
 import "../css/Calendar.css"
+import HeaderDay from './calendar/HeaderDay'
 
 const Calendar = () => {
+  const days = [
+    {
+      dayWeek: "日",
+      dayNumber: 13
+    },
+    {
+      dayWeek: "月",
+      dayNumber: 14
+    },
+    {
+      dayWeek: "火",
+      dayNumber: 15
+    },
+    {
+      dayWeek: "水",
+      dayNumber: 16
+    },
+    {
+      dayWeek: "木",
+      dayNumber: 17
+    },
+    {
+      dayWeek: "金",
+      dayNumber: 18
+    },
+    {
+      dayWeek: "土",
+      dayNumber: 19
+    },
+  ]
 
   useEffect(() => {
     const head = document.getElementsByTagName('head')[0];
@@ -40,55 +71,9 @@ const Calendar = () => {
               <div role="row" className="header-days-row-wrapper">
                 <div role="presentation" className="header-days" key="1">
                   <div className="header-days-spacer"></div>
-                  <div role="columnheader" className="header-day">
-                    <div className="header-day-border"></div>
-                    <h2 className="header-day-content">
-                      <div className="day-week">日</div>
-                      <div className="day-number">13</div>
-                    </h2>
-                  </div>
-                  <div role="columnheader" className="header-day" key="2">
-                    <div className="header-day-border"></div>
-                    <h2 className="header-day-content">
-                      <div className="day-week">月</div>
-                      <div className="day-number">14</div>
-                    </h2>
-                  </div>
-                  <div role="columnheader" className="header-day" key="3">
-                    <div className="header-day-border"></div>
-                    <h2 className="header-day-content">
-                      <div className="day-week">火</div>
-                      <div className="day-number">15</div>
-                    </h2>
-                  </div>
-                  <div role="columnheader" className="header-day" key="4">
-                    <div className="header-day-border"></div>
-                    <h2 className="header-day-content">
-                      <div className="day-week">水</div>
-                      <div className="day-number">16</div>
-                    </h2>
-                  </div>
-                  <div role="columnheader" className="header-day" key="5">
-                    <div className="header-day-border"></div>
-                    <h2 className="header-day-content">
-                      <div className="day-week">木</div>
-                      <div className="day-number">17</div>
-                    </h2>
-                  </div>
-                  <div role="columnheader" className="header-day" key="6">
-                    <div className="header-day-border"></div>
-                    <h2 className="header-day-content">
-                      <div className="day-week">金</div>
-                      <div className="day-number">18</div>
-                    </h2>
-                  </div>
-                  <div role="columnheader" className="header-day">
-                    <div className="header-day-border"></div>
-                    <h2 className="header-day-content">
-                      <div className="day-week">土</div>
-                      <div className="day-number">19</div>
-                    </h2>
-                  </div>
+                  {
+                    days.map(day => <HeaderDay dayWeek={day.dayWeek} dayNumber={day.dayNumber} />)
+                  }
                 </div>
               </div>
               <div role="row" className="header-row-spacer">
