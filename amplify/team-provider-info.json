@@ -10,6 +10,11 @@
       "StackName": "amplify-recalendar-dev-223243",
       "StackId": "arn:aws:cloudformation:us-east-1:671620411615:stack/amplify-recalendar-dev-223243/7d781720-6745-11ed-a348-1218334f70d1",
       "AmplifyAppId": "d2k1b38jqhry6a"
+    },
+    "categories": {
+      "auth": {
+        "recalendar6cdcc831": {}
+      }
     }
   }
 }
