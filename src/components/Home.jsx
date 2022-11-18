@@ -4,6 +4,8 @@ import { getAuth, signOut } from 'firebase/auth'
 import { Button, Menu, MenuItem } from "@mui/material"
 import { useNavigate } from 'react-router-dom'
 import ApiCalendar from 'react-google-calendar-api'
+import Calendar from './Calendar'
+import Event from '../models/Event'
 
 const config = {
   "clientId": process.env.REACT_APP_GOOGLE_CLIENT_ID,
@@ -18,6 +20,7 @@ const apiCalendar = new ApiCalendar(config)
 
 const Home = () => {
   const [anchorEl, setAnchorEl] = useState(null)
+  const [events, setEvents] = useState([])
   const open = Boolean(anchorEl)
   const navigate = useNavigate()
   const auth = getAuth()
@@ -39,10 +42,57 @@ const Home = () => {
   }
   const listEvents = async () => {
     const queryOptions = {
-      maxResults: 10
+      maxResults: 10,
+      timeMin: "2022-11-17T09:19:08.000Z",
+      timeMax: "2022-11-24T09:19:08.000Z",
     }
     const result = await apiCalendar.listEvents(queryOptions)
-    console.log(result)
+    let events = result.result.items.map(item => {
+      let startAt = null
+      let endAt = null
+      if(item.start.date) {
+        startAt = new Date(item.start.date)
+        startAt.setHours(0, 0, 0)
+        endAt = new Date(item.end.date)
+        endAt.setHours(23, 59, 59)
+        endAt.setDate(endAt.getDate() - 1)
+      } else {
+        startAt = new Date(item.start.dateTime)
+        endAt = new Date(item.end.dateTime)
+      }
+      const title = item.summary
+
+      return new Event(title, "", startAt, endAt)
+    })
+
+    // 複数日にまたがる予定は毎日分Eventを作る
+    events
+      .filter(event => event.startAt.getDate() !== event.endAt.getDate())
+      .forEach(startDateEvent => {
+        // イベント終了日
+        let finishDateEvent = startDateEvent.copy()
+        finishDateEvent.startAt.setDate(startDateEvent.endAt.getDate())
+        finishDateEvent.startAt.setHours(0, 0, 0)
+        events.push(finishDateEvent)
+
+        // イベント開始日
+        startDateEvent.endAt.setHours(23, 59, 59)
+
+        // イベント中日
+        let middleDateEvent = startDateEvent.copy()
+        middleDateEvent.startAt.setHours(0, 0, 0)
+        while(true) {
+          middleDateEvent = middleDateEvent.copy()
+          middleDateEvent.startAt.setDate(middleDateEvent.startAt.getDate() + 1)
+          middleDateEvent.endAt.setDate(middleDateEvent.endAt.getDate() + 1)
+          if (middleDateEvent.startAt.getDate() === finishDateEvent.startAt.getDate()) {
+            break
+          }
+          events.push(middleDateEvent)
+        }
+      })
+
+    setEvents(events)
   }
 
   return (
@@ -84,6 +134,7 @@ const Home = () => {
       >
         list events
       </Button>
+      < Calendar events={events}/>
     </div>
   )
 }

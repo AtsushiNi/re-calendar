@@ -3,11 +3,12 @@ import "../css/Calendar.css"
 import HeaderDay from './calendar/HeaderDay'
 import DayColumn from './calendar/DayColumn'
 
-const Calendar = () => {
-  const days = [
+const Calendar = props => {
+  const { events } = props
+  let days = [
     {
       dayWeek: "日",
-      dayNumber: 13,
+      dayNumber: 17,
       events: [
         {
           title: "機械システム学セミナー",
@@ -25,35 +26,39 @@ const Calendar = () => {
     },
     {
       dayWeek: "月",
-      dayNumber: 14,
-      events: []
-    },
-    {
-      dayWeek: "火",
-      dayNumber: 15,
-      events: []
-    },
-    {
-      dayWeek: "水",
-      dayNumber: 16,
-      events: []
-    },
-    {
-      dayWeek: "木",
-      dayNumber: 17,
-      events: []
-    },
-    {
-      dayWeek: "金",
       dayNumber: 18,
       events: []
     },
     {
-      dayWeek: "土",
+      dayWeek: "火",
       dayNumber: 19,
       events: []
     },
+    {
+      dayWeek: "水",
+      dayNumber: 20,
+      events: []
+    },
+    {
+      dayWeek: "木",
+      dayNumber: 21,
+      events: []
+    },
+    {
+      dayWeek: "金",
+      dayNumber: 22,
+      events: []
+    },
+    {
+      dayWeek: "土",
+      dayNumber: 23,
+      events: []
+    },
   ]
+
+  days.forEach(day => {
+    day.events = events.filter(event => event.startAt.getDate() === day.dayNumber)
+  })
 
   useEffect(() => {
     const head = document.getElementsByTagName('head')[0];
@@ -143,7 +148,7 @@ const Calendar = () => {
                   {
                     [...Array(24)].map((_, key) => (
                       <div className="side-time" key={key}>
-                        <span>午前10時</span>
+                        <span>{key}時</span>
                       </div>
                     ))
                   }
