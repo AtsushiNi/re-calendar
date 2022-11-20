@@ -26,5 +26,29 @@
         ]
       }
     }
+  },
+  "function": {
+    "eventList": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": []
+    }
+  },
+  "api": {
+    "listEvent": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "eventList",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
+    }
   }
 }

@@ -14,6 +14,15 @@
     "categories": {
       "auth": {
         "recalendar6cdcc831": {}
+      },
+      "function": {
+        "eventList": {
+          "deploymentBucketName": "amplify-recalendar-dev-223243-deployment",
+          "s3Key": "amplify-builds/eventList-664f35485859466e504a-build.zip"
+        }
+      },
+      "api": {
+        "listEvent": {}
       }
     }
   }

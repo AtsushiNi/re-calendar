@@ -11,7 +11,7 @@ import Home from './components/Home'
 import Calendar from './components/Calendar'
 import TestDemo from './components/TestDemo'
 
-import { Auth, Hub } from 'aws-amplify'
+import { Auth, Hub, API } from 'aws-amplify'
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
 
 function App() {
@@ -32,14 +32,11 @@ function App() {
       }
     });
 
-    Auth.currentAuthenticatedUser()
-      .then(currentUser => setUser(currentUser))
-      .catch(() => console.log("Not signed in"));
+    Auth.currentAuthenticatedUser().then(currentUser => setUser(currentUser))
 
     return unsubscribe;
   }, [])
 
-  console.log(user)
   return (
     <div>
       <div className="App">
@@ -47,14 +44,15 @@ function App() {
         <button onClick={() => Auth.federatedSignIn({provider: CognitoHostedUIIdentityProvider.Google })}>Open Google</button>
         <button onClick={() => Auth.signOut()}>Sign Out</button>
         <div>{user && user.getUsername()}</div>
-        <Router>
-          <Routes>
-            <Route index path="/" element={<Home />} />
-            <Route path='/signin' element={<SignIn />} />
-            <Route path="/calendar" element={<Calendar />} />
-            {/* <Route path='/test' element={<TestDemo />} /> */}
-          </Routes>
-        </Router>
+        <Calendar user={user} />
+        {/* <Router> */}
+        {/*   <Routes> */}
+        {/*     <Route index path="/" element={<Home />} /> */}
+        {/*     <Route path='/signin' element={<SignIn />} /> */}
+        {/*     <Route path="/calendar" element={<Calendar />} /> */}
+        {/*     {/1* <Route path='/test' element={<TestDemo />} /> *1/} */}
+        {/*   </Routes> */}
+        {/* </Router> */}
       </div>
     </div>
   );
