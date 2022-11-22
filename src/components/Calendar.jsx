@@ -12,43 +12,19 @@ import Event from '../models/Event'
 const Calendar = () => {
   const { currentUser } = useAuthContext()
   const [loading, setLoading] = useState(true)
-  const [days, setDays] = useState([
-    {
-      dayWeek: "日",
-      dayNumber: 17,
+
+  const today = new Date()
+  const defaultDays = [...Array(7)].map((_, i) => {
+    const day = new Date()
+    day.setDate(today.getDate() + i)
+
+    return {
+      dayNumber: day.getDate(),
+      dayWeek: [ "日", "月", "火", "水", "木", "金", "土" ][day.getDay()],
       events: []
-    },
-    {
-      dayWeek: "月",
-      dayNumber: 18,
-      events: []
-    },
-    {
-      dayWeek: "火",
-      dayNumber: 19,
-      events: []
-    },
-    {
-      dayWeek: "水",
-      dayNumber: 20,
-      events: []
-    },
-    {
-      dayWeek: "木",
-      dayNumber: 21,
-      events: []
-    },
-    {
-      dayWeek: "金",
-      dayNumber: 22,
-      events: []
-    },
-    {
-      dayWeek: "土",
-      dayNumber: 23,
-      events: []
-    },
-  ])
+    }
+  })
+  const [days, setDays] = useState(defaultDays)
 
   useEffect(() => {
     // スクロール同期のCDN
