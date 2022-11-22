@@ -18,7 +18,7 @@
       "function": {
         "eventList": {
           "deploymentBucketName": "amplify-recalendar-dev-223243-deployment",
-          "s3Key": "amplify-builds/eventList-664f35485859466e504a-build.zip"
+          "s3Key": "amplify-builds/eventList-77775a6542636963652b-build.zip"
         }
       },
       "api": {

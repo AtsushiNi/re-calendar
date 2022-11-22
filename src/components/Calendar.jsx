@@ -1,31 +1,22 @@
 import { useEffect, useState } from 'react'
 import { Auth, API } from 'aws-amplify'
+import { CircularProgress, Box } from '@mui/material'
+
+import { useAuthContext } from '../context/AuthContext'
 
 import "../css/Calendar.css"
 import HeaderDay from './calendar/HeaderDay'
 import DayColumn from './calendar/DayColumn'
 import Event from '../models/Event'
 
-const Calendar = props => {
-  const { user, events } = props
+const Calendar = () => {
+  const { currentUser } = useAuthContext()
+  const [loading, setLoading] = useState(true)
   const [days, setDays] = useState([
     {
       dayWeek: "日",
       dayNumber: 17,
-      events: [
-        {
-          title: "機械システム学セミナー",
-          time: "午前9:30~11:30"
-        },
-        {
-          title: "機械システム学セミナー",
-          time: "午前9:30~11:30"
-        },
-        {
-          title: "機械システム学セミナー",
-          time: "午前9:30~11:30"
-        }
-      ]
+      events: []
     },
     {
       dayWeek: "月",
@@ -82,7 +73,9 @@ const Calendar = props => {
     }
 
     const getCalendar = async() => {
-      const token = user.signInUserSession.idToken.jwtToken
+      setLoading(true)
+
+      const token = currentUser.signInUserSession.idToken.jwtToken
       const myInit = {
         headers: {
           Authorization: token
@@ -142,10 +135,11 @@ const Calendar = props => {
           }
         })
       )
+
+      setLoading(false)
     }
-    user && getCalendar()
-  }, [user, days])
-  console.log(days)
+    !!currentUser && getCalendar()
+  }, [currentUser])
 
   return (
     <div role="main">
@@ -219,19 +213,29 @@ const Calendar = props => {
                   }
                 </div>
               </div>
-              <div role="presentation" className="scroll-window">
-                <div role="row" className="day-columns">
-                  <div className="h-borders">
-                    {
-                      [...Array(24)].map((_, key) => (<div className="gap-cell" key={key}></div>))
-                    }
+              {
+                loading
+                ? (
+                  <Box sx={{ margin: 'auto' }}>
+                    <CircularProgress />
+                  </Box>
+                )
+                : (
+                  <div role="presentation" className="scroll-window">
+                    <div role="row" className="day-columns">
+                      <div className="h-borders">
+                        {
+                          [...Array(24)].map((_, key) => (<div className="gap-cell" key={key}></div>))
+                        }
+                      </div>
+                      <div className="day-column-2"></div>
+                      {
+                        days.map((day, key) => <DayColumn events={day.events} key={key} />)
+                      }
+                    </div>
                   </div>
-                  <div className="day-column-2"></div>
-                  {
-                    days.map((day, key) => <DayColumn events={day.events} key={key} />)
-                  }
-                </div>
-              </div>
+                )
+              }
             </div>
           </div>
         </div>

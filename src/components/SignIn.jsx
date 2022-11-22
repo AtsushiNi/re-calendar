@@ -1,18 +1,23 @@
+import { useEffect } from 'react'
 import '../css/SignIn.css'
 import Button from '@mui/material/Button'
 import GoogleIcon from '@mui/icons-material/Google';
+import { Auth } from 'aws-amplify'
+import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
 import { useNavigate } from 'react-router-dom'
-import { getAuth, signInWithPopup } from 'firebase/auth'
-import { provider } from '../context/AuthContext'
+import { useAuthContext } from '../context/AuthContext'
 
 const SignIn = () => {
   const navigate = useNavigate()
-  const auth = getAuth()
+  const { currentUser, signIn } = useAuthContext()
+
+  useEffect(() => {
+    currentUser && navigate("/")
+  }, [currentUser])
 
   const handleSignin = async (event) => {
     try {
-      await signInWithPopup(auth, provider)
-      navigate("/")
+      await signIn()
     } catch(error) {
       console.log(error)
     }
