@@ -1,6 +1,6 @@
 .calendar-grid {
   background-color: #fff;
-  height: 100%;
+  height: calc(100vh - 90px);
   width: 715px;
   display: flex;
   flex-direction: column;
@@ -199,12 +199,12 @@ h2.header-day-content {
   content: "";
   height: 4px;
   position: absolute;
-  width: calc(100% - 16px);
+  width: calc(715px - 16px);
   z-index: 506;
 }
 
 .side-column {
-  height: 800px;
+  height: calc(100vh - 90px - 102px);
   overflow-y: hidden;
   flex: none;
   display: flex;
@@ -236,7 +236,7 @@ h2.header-day-content {
 }
 
 .scroll-window {
-  height: 800px;
+  height: calc(100vh - 90px - 102px);
   overflow-x: auto;
   overflow-y: scroll;
   display: flex;

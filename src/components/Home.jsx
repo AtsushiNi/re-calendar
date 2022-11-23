@@ -6,6 +6,7 @@ import { Button, Menu, MenuItem } from "@mui/material"
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../context/AuthContext'
 import Calendar from './Calendar'
+import CalendarDetail from './CalendarDetail'
 
 const config = {
   "clientId": process.env.REACT_APP_GOOGLE_CLIENT_ID,
@@ -55,6 +56,7 @@ const Home = () => {
                 aria-expanded={open ? 'true' : undefined}
                 aria-haspopup="true"
                 onClick={handleClick}
+                sx={{color: 'white'}}
               >
                 Account
               </Button>
@@ -70,8 +72,11 @@ const Home = () => {
           </nav>
         </div>
       </header>
-      <h1>Home</h1>
-      <Calendar/>
+
+      <div style={{ display: 'flex' }}>
+        <Calendar/>
+        <CalendarDetail />
+      </div>
     </div>
   )
 }

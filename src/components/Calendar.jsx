@@ -189,15 +189,15 @@ const Calendar = () => {
                   }
                 </div>
               </div>
-              {
-                loading
-                ? (
-                  <Box sx={{ margin: 'auto' }}>
-                    <CircularProgress />
-                  </Box>
-                )
-                : (
-                  <div role="presentation" className="scroll-window">
+              <div role="presentation" className="scroll-window">
+                {
+                  loading
+                  ? (
+                    <Box sx={{ margin: 'auto' }}>
+                      <CircularProgress />
+                    </Box>
+                  )
+                  : (
                     <div role="row" className="day-columns">
                       <div className="h-borders">
                         {
@@ -209,9 +209,9 @@ const Calendar = () => {
                         days.map((day, key) => <DayColumn events={day.events} key={key} />)
                       }
                     </div>
-                  </div>
-                )
-              }
+                  )
+                }
+              </div>
             </div>
           </div>
         </div>
