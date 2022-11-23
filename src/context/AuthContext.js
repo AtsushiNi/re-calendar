@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
       .then(currentUser => setCurrentUser(currentUser))
       .catch(() => setCurrentUser(null))
 
-    return unsubscribe;
+    // return unsubscribe;
   }, [])
 
   const signIn = async () => {

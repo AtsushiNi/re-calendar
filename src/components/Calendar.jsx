@@ -12,21 +12,8 @@ import Event from '../models/Event'
 
 const Calendar = () => {
   const { currentUser, signOut } = useAuthContext()
-  const { candidates } = useCalendarContext()
+  const { days, events } = useCalendarContext()
   const [loading, setLoading] = useState(true)
-
-  const today = new Date()
-  const defaultDays = [...Array(7)].map((_, i) => {
-    const day = new Date()
-    day.setDate(today.getDate() + i)
-
-    return {
-      dayNumber: day.getDate(),
-      dayWeek: [ "日", "月", "火", "水", "木", "金", "土" ][day.getDay()],
-      events: []
-    }
-  })
-  const [days, setDays] = useState(defaultDays)
 
   useEffect(() => {
     // スクロール同期のCDN
@@ -49,85 +36,11 @@ const Calendar = () => {
         sideColumn.scrollTop(scrollWindow.scrollTop())
       })
     }
+  }, [])
 
-    const getCalendar = async() => {
-      setLoading(true)
-
-      const token = currentUser.signInUserSession.idToken.jwtToken
-      const myInit = {
-        headers: {
-          Authorization: token
-        }
-      }
-
-      let result
-      try {
-        result = await API.get("listEvent", "/events", myInit)
-      } catch (error) {
-        console.log(error)
-        signOut()
-      }
-
-      let events = result.map(item => {
-        let startAt = null
-        let endAt = null
-        if(item.start.date) {
-          startAt = new Date(item.start.date)
-          startAt.setHours(0, 0, 0)
-          endAt = new Date(item.end.date)
-          endAt.setHours(23, 59, 59)
-          endAt.setDate(endAt.getDate() - 1)
-        } else {
-          startAt = new Date(item.start.dateTime)
-          endAt = new Date(item.end.dateTime)
-        }
-        const title = item.summary
-
-        return new Event(title, "", startAt, endAt)
-      })
-
-      // 複数日にまたがる予定は毎日分Eventを作る
-      events
-        .filter(event => event.startAt.getDate() !== event.endAt.getDate())
-        .forEach(startDateEvent => {
-          // イベント終了日
-          let finishDateEvent = startDateEvent.copy()
-          finishDateEvent.startAt.setDate(startDateEvent.endAt.getDate())
-          finishDateEvent.startAt.setHours(0, 0, 0)
-          events.push(finishDateEvent)
-
-          // イベント開始日
-          startDateEvent.endAt.setHours(23, 59, 59)
-
-          // イベント中日
-          let middleDateEvent = startDateEvent.copy()
-          middleDateEvent.startAt.setHours(0, 0, 0)
-          while(true) {
-            middleDateEvent = middleDateEvent.copy()
-            middleDateEvent.startAt.setDate(middleDateEvent.startAt.getDate() + 1)
-            middleDateEvent.endAt.setDate(middleDateEvent.endAt.getDate() + 1)
-            if (middleDateEvent.startAt.getDate() === finishDateEvent.startAt.getDate()) {
-              break
-            }
-            events.push(middleDateEvent)
-          }
-        })
-
-      // 候補
-      events.push(...candidates)
-
-      setDays(
-        days.map(day => {
-          return {
-            ...day, events: events.filter(event => event.startAt.getDate() === day.dayNumber)
-          }
-        })
-      )
-
-      setLoading(false)
-    }
-    !!currentUser && getCalendar()
-  }, [currentUser, candidates])
+  useEffect(() => {
+    if(events.length) { setLoading(false) }
+  }, [days])
 
   return (
     <div role="main">
@@ -145,7 +58,7 @@ const Calendar = () => {
                 <div role="presentation" className="header-days" key="1">
                   <div className="header-days-spacer"></div>
                   {
-                    days.map((day, key) => <HeaderDay dayWeek={day.dayWeek} dayNumber={day.dayNumber} key={key}/>)
+                    days?.map((day, key) => <HeaderDay dayWeek={day.dayWeek} dayNumber={day.dayNumber} key={key}/>)
                   }
                 </div>
               </div>

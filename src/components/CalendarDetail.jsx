@@ -8,17 +8,22 @@ import { useCalendarContext } from '../context/CalendarContext'
 
 const CalendarDetail = () => {
   const [alignment, setAlignment] = useState('60minutes')
-  const [startDate, setStartDate] = useState(dayjs())
-  const [endDate, setEndDate] = useState(dayjs().add(2, 'w'))
-  const [startTime, setStartTime] = useState(dayjs().hour(10))
-  const [endTime, setEndTime] = useState(dayjs().hour(22))
 
-  const { updateStartDate } = useCalendarContext()
+  const {
+    startDate,
+    endDate,
+    startTime,
+    endTime,
+    updateStartDate,
+    updateEndDate,
+    updateStartTime,
+    updateEndTime
+  } = useCalendarContext()
 
-  const handleChangeStartDate = (value) => {
-    setStartDate(value)
-    updateStartDate(value)
-  }
+  const handleChangeStartDate = value => updateStartDate(value)
+  const handleChangeEndDate = value => updateEndDate(value)
+  const handleChangeStartTime = value => updateStartTime(value)
+  const handleChangeEndTime = value => updateEndTime(value)
 
   const today = (new Date())
   const dayString = today.getFullYear() + '/' + ('0' + (today.getMonth() + 1)).slice(-1) + '/' + ('0' + today.getDay()).slice(-2)
@@ -58,7 +63,7 @@ const CalendarDetail = () => {
             <DesktopDatePicker
               inputFormat="MM/DD/YYYY"
               value={endDate}
-              onChange={value => setEndDate(value)}
+              onChange={handleChangeEndDate}
               renderInput={(params) => <TextField {...params} />}
             />
           </Box>
@@ -69,13 +74,13 @@ const CalendarDetail = () => {
           <Box sx={{display: 'flex'}}>
             <MobileTimePicker
               value={startTime}
-              onChange={value => setStartTime(value)}
+              onChange={handleChangeStartTime}
               renderInput={params => <TextField {...params}/>}
             />
             <span>~</span>
             <MobileTimePicker
               value={endTime}
-              onChange={value => setEndTime(value)}
+              onChange={handleChangeEndTime}
               renderInput={params => <TextField {...params}/>}
             />
           </Box>
