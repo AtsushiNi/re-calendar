@@ -4,12 +4,21 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker'
 import dayjs from 'dayjs'
 
+import { useCalendarContext } from '../context/CalendarContext'
+
 const CalendarDetail = () => {
   const [alignment, setAlignment] = useState('60minutes')
   const [startDate, setStartDate] = useState(dayjs())
   const [endDate, setEndDate] = useState(dayjs().add(2, 'w'))
   const [startTime, setStartTime] = useState(dayjs().hour(10))
   const [endTime, setEndTime] = useState(dayjs().hour(22))
+
+  const { updateStartDate } = useCalendarContext()
+
+  const handleChangeStartDate = (value) => {
+    setStartDate(value)
+    updateStartDate(value)
+  }
 
   const today = (new Date())
   const dayString = today.getFullYear() + '/' + ('0' + (today.getMonth() + 1)).slice(-1) + '/' + ('0' + today.getDay()).slice(-2)
@@ -42,7 +51,7 @@ const CalendarDetail = () => {
             <DesktopDatePicker
               inputFormat="MM/DD/YYYY"
               value={startDate}
-              onChange={value => setStartDate(value)}
+              onChange={handleChangeStartDate}
               renderInput={(params) => <TextField {...params} />}
             />
             <span>~</span>

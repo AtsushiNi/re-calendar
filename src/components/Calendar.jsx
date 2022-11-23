@@ -3,6 +3,7 @@ import { Auth, API } from 'aws-amplify'
 import { CircularProgress, Box } from '@mui/material'
 
 import { useAuthContext } from '../context/AuthContext'
+import { useCalendarContext } from '../context/CalendarContext'
 
 import "../css/Calendar.css"
 import HeaderDay from './calendar/HeaderDay'
@@ -10,7 +11,8 @@ import DayColumn from './calendar/DayColumn'
 import Event from '../models/Event'
 
 const Calendar = () => {
-  const { currentUser } = useAuthContext()
+  const { currentUser, signOut } = useAuthContext()
+  const { candidates } = useCalendarContext()
   const [loading, setLoading] = useState(true)
 
   const today = new Date()
@@ -57,7 +59,14 @@ const Calendar = () => {
           Authorization: token
         }
       }
-      const result = await API.get("listEvent", "/events", myInit)
+
+      let result
+      try {
+        result = await API.get("listEvent", "/events", myInit)
+      } catch (error) {
+        console.log(error)
+        signOut()
+      }
 
       let events = result.map(item => {
         let startAt = null
@@ -104,6 +113,9 @@ const Calendar = () => {
           }
         })
 
+      // 候補
+      events.push(...candidates)
+
       setDays(
         days.map(day => {
           return {
@@ -115,7 +127,7 @@ const Calendar = () => {
       setLoading(false)
     }
     !!currentUser && getCalendar()
-  }, [currentUser])
+  }, [currentUser, candidates])
 
   return (
     <div role="main">

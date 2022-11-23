@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../context/AuthContext'
 import Calendar from './Calendar'
 import CalendarDetail from './CalendarDetail'
+import { CalendarProvider } from '../context/CalendarContext'
 
 const config = {
   "clientId": process.env.REACT_APP_GOOGLE_CLIENT_ID,
@@ -74,8 +75,10 @@ const Home = () => {
       </header>
 
       <div style={{ display: 'flex' }}>
-        <Calendar/>
-        <CalendarDetail />
+        <CalendarProvider>
+          <Calendar/>
+          <CalendarDetail />
+        </CalendarProvider>
       </div>
     </div>
   )
