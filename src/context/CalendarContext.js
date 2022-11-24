@@ -1,9 +1,12 @@
 import { createContext, useState, useContext, useEffect } from 'react'
 import dayjs from 'dayjs'
+import 'dayjs/locale/ja'
 import { API } from 'aws-amplify'
 
 import Event from '../models/Event'
 import { useAuthContext } from './AuthContext'
+
+dayjs.locale('ja')
 
 const CalendarContext = createContext({ candidates: [] })
 
@@ -14,14 +17,13 @@ export function useCalendarContext() {
 export function CalendarProvider({ children }) {
   const { currentUser, signOut } = useAuthContext()
 
-  const today = new Date()
+  const today = dayjs()
   const defaultDays = [...Array(7)].map((_, i) => {
-    const day = new Date()
-    day.setDate(today.getDate() + i)
+    const day = today.add(i, 'day')
 
     return {
-      dayNumber: day.getDate(),
-      dayWeek: [ "日", "月", "火", "水", "木", "金", "土" ][day.getDay()],
+      dayNumber: day.date(),
+      dayWeek: day.format('ddd'),
       events: []
     }
   })
@@ -71,14 +73,11 @@ export function CalendarProvider({ children }) {
       let startAt = null
       let endAt = null
       if(item.start.date) {
-        startAt = new Date(item.start.date)
-        startAt.setHours(0, 0, 0)
-        endAt = new Date(item.end.date)
-        endAt.setHours(23, 59, 59)
-        endAt.setDate(endAt.getDate() - 1)
+        startAt = dayjs(item.start.date).startOf('day')
+        endAt = dayjs(item.end.date).subtract(1, 'day').endOf('day')
       } else {
-        startAt = new Date(item.start.dateTime)
-        endAt = new Date(item.end.dateTime)
+        startAt = dayjs(item.start.dateTime)
+        endAt = dayjs(item.end.dateTime)
       }
       const title = item.summary
 
@@ -87,25 +86,24 @@ export function CalendarProvider({ children }) {
 
     // 複数日にまたがる予定は毎日分Eventを作る
     googleEvents
-      .filter(event => event.startAt.getDate() !== event.endAt.getDate())
+      .filter(event => event.startAt.date() !== event.endAt.date())
       .forEach(startDateEvent => {
         // イベント終了日
         let finishDateEvent = startDateEvent.copy()
-        finishDateEvent.startAt.setDate(startDateEvent.endAt.getDate())
-        finishDateEvent.startAt.setHours(0, 0, 0)
+        finishDateEvent.startAt = startDateEvent.endAt.startOf('day')
         googleEvents.push(finishDateEvent)
 
         // イベント開始日
-        startDateEvent.endAt.setHours(23, 59, 59)
+        startDateEvent.startAt.endOf('day')
 
         // イベント中日
         let middleDateEvent = startDateEvent.copy()
-        middleDateEvent.startAt.setHours(0, 0, 0)
+        middleDateEvent.startAt = middleDateEvent.startAt.startOf('day')
         while(true) {
           middleDateEvent = middleDateEvent.copy()
-          middleDateEvent.startAt.setDate(middleDateEvent.startAt.getDate() + 1)
-          middleDateEvent.endAt.setDate(middleDateEvent.endAt.getDate() + 1)
-          if (middleDateEvent.startAt.getDate() === finishDateEvent.startAt.getDate()) {
+          middleDateEvent.startAt = middleDateEvent.startAt.add(1, 'day')
+          middleDateEvent.endAt = middleDateEvent.endAt.add(1, 'day')
+          if (middleDateEvent.startAt.date() === finishDateEvent.startAt.date()) {
             break
           }
           googleEvents.push(middleDateEvent)
@@ -116,8 +114,8 @@ export function CalendarProvider({ children }) {
 
     setDays(
       days.map(day => {
-        const dayGoogleEvents = googleEvents.filter(event => event.startAt.getDate() === day.dayNumber)
-        const dayCandidates = candidates.filter(event => event.startAt.getDate() === day.dayNumber)
+        const dayGoogleEvents = googleEvents.filter(event => event.startAt.date() === day.dayNumber)
+        const dayCandidates = candidates.filter(event => event.startAt.date() === day.dayNumber)
         dayGoogleEvents.push(...dayCandidates)
         return {
           ...day, events: dayGoogleEvents
@@ -134,37 +132,29 @@ export function CalendarProvider({ children }) {
       const startAt = startDate.add(i, 'd').hour(startTime.hour()).minute(startTime.minute()).second(0)
       const endAt = startDate.add(i, 'd').hour(endTime.hour()).minute(endTime.minute()).second(0).subtract(1, 's')
 
-      let dayCandidates = [new Event("候補", "", startAt.toDate(), endAt.toDate())]
+      let dayCandidates = [new Event("候補", "", startAt, endAt)]
       events.forEach(googleEvent => {
         dayCandidates.forEach(candidateEvent => {
           // googleEventとcandidateEventが被っていたら、candidateEventを削る
-          if(dayjs(googleEvent.startAt).subtract(gapTime, 'minute').isBefore(dayjs(candidateEvent.startAt)) && dayjs(googleEvent.endAt).add(gapTime, 'minute').isBetween(dayjs(candidateEvent.startAt), dayjs(candidateEvent.endAt))) {
-            let startTime = new Date(googleEvent.endAt.getTime())
-            startTime.setMinutes(startTime.getMinutes() + gapTime)
-            candidateEvent.startAt = startTime
-          } else if(dayjs(googleEvent.startAt).subtract(gapTime, 'minute').isBetween(dayjs(candidateEvent.startAt), dayjs(candidateEvent.endAt)) && dayjs(googleEvent.endAt).add(gapTime, 'minute').isAfter(dayjs(candidateEvent.endAt))) {
-            let endTime = new Date(googleEvent.startAt.getTime())
-            endTime.setMinutes(endTime.getMinutes() - gapTime)
-            candidateEvent.endAt = endTime
-          } else if(dayjs(googleEvent.startAt).subtract(gapTime, 'minute').isBefore(dayjs(candidateEvent.startAt)) && dayjs(googleEvent.endAt).add(gapTime, 'minute').isAfter(dayjs(candidateEvent.endAt))) {
+          if(googleEvent.startAt.subtract(gapTime, 'minute').isBefore(candidateEvent.startAt) && googleEvent.endAt.add(gapTime, 'minute').isBetween(candidateEvent.startAt, candidateEvent.endAt)) {
+            candidateEvent.startAt = googleEvent.endAt.add(gapTime, 'minute')
+          } else if(googleEvent.startAt.subtract(gapTime, 'minute').isBetween(candidateEvent.startAt, candidateEvent.endAt) && googleEvent.endAt.add(gapTime, 'minute').isAfter(candidateEvent.endAt)) {
+            candidateEvent.endAt = googleEvent.startAt.subtract(gapTime, 'minute')
+          } else if(googleEvent.startAt.subtract(gapTime, 'minute').isBefore(candidateEvent.startAt) && googleEvent.endAt.add(gapTime, 'minute').isAfter(candidateEvent.endAt)) {
             dayCandidates = dayCandidates.filter(event => event !== candidateEvent)
-          } else if(dayjs(googleEvent.startAt).subtract(gapTime, 'minute').isAfter(dayjs(candidateEvent.startAt)) && dayjs(googleEvent.endAt).add(gapTime, 'minute').isBefore(dayjs(candidateEvent.endAt))) {
-            let startTime = new Date(googleEvent.endAt.getTime())
-            startTime.setMinutes(startTime.getMinutes() + gapTime)
-            dayCandidates.push(new Event("候補", "", startTime , candidateEvent.endAt))
-
-            startTime = new Date(googleEvent.startAt.getTime())
-            startTime.setMinutes(startTime.getMinutes() - gapTime)
-            candidateEvent.endAt = startTime
+          } else if(googleEvent.startAt.subtract(gapTime, 'minute').isAfter(candidateEvent.startAt) && googleEvent.endAt.add(gapTime, 'minute').isBefore(candidateEvent.endAt)) {
+            dayCandidates.push(new Event("候補", "", googleEvent.endAt.add(gapTime, 'minute') , candidateEvent.endAt.clone()))
+            candidateEvent.endAt = googleEvent.startAt.subtract(gapTime, 'minute')
           }
         })
       })
 
       //TODO
-      //dayjsに書き換える
       //所要時間を実装
       //カレンダーの横スクロール
       //カレンダーのイベント重ねる・色変える
+      //複数カレンダーの実装
+      //カレンダーを8:00~にする
       candidateEvents.push(...dayCandidates)
     })
 
@@ -172,8 +162,8 @@ export function CalendarProvider({ children }) {
 
     setDays(
       days.map(day => {
-        const dayGoogleEvents = events.filter(event => event.startAt.getDate() === day.dayNumber)
-        const dayCandidates = candidateEvents.filter(event => event.startAt.getDate() === day.dayNumber)
+        const dayGoogleEvents = events.filter(event => event.startAt.date() === day.dayNumber)
+        const dayCandidates = candidateEvents.filter(event => event.startAt.date() === day.dayNumber)
         dayCandidates.push(...dayGoogleEvents)
         return {
           ...day, events: dayCandidates

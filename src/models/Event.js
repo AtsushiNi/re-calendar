@@ -10,8 +10,8 @@ export default class Event {
     return new Event(
       this.title,
       this.time,
-      new Date(this.startAt.getTime()),
-      new Date(this.endAt.getTime())
+      this.startAt.clone(),
+      this.endAt.clone()
     )
   }
 }

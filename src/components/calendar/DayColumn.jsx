@@ -4,10 +4,10 @@ const DayColumn = props => {
   const { events } = props
 
   events.sort((a, b) => {
-    if(a.startAt.getTime() < b.startAt.getTime()) return -1
-    if(a.startAt.getTime() > b.startAt.getTime()) return 1
-    if(a.endAt.getTime() < b.endAt.getTime()) return -1
-    if(a.endAt.getTime() > b.endAt.getTime()) return 1
+    if(a.startAt.isBefore(b.startAt)) return -1
+    if(a.startAt.isAfter(b.startAt)) return 1
+    if(a.endAt.isBefore(b.endAt)) return -1
+    if(a.endAt.isAfter(b.endAt)) return 1
     return 0
   })
 
