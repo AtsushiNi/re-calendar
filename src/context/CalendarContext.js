@@ -28,6 +28,7 @@ export function CalendarProvider({ children }) {
     }
   })
 
+  const [requiredTime, setRequiredTime] = useState(60)
   const [gapTime, setGapTime] = useState(30)
   const [startDate, setStartDate] = useState(dayjs())
   const [endDate, setEndDate] = useState(dayjs().add(2, 'w'))
@@ -40,14 +41,17 @@ export function CalendarProvider({ children }) {
 
   useEffect(() => {
     createCandidates()
-  }, [startTime, endTime])
+  }, [startTime, endTime, requiredTime, gapTime])
 
   useEffect(() => createCandidates(), [events])
 
+  // ログイン直後に認証が成功するとカレンダーを読み込む
   useEffect(() => {
     !!currentUser && getCalendar()
   }, [!!currentUser])
 
+  const updateRequiredTime = value => setRequiredTime(value)
+  const updateGapTime = value => setGapTime(value)
   const updateStartDate = value => setStartDate(value)
   const updateEndDate = value => setEndDate(value)
   const updateStartTime = value => setStartTime(value)
@@ -149,8 +153,10 @@ export function CalendarProvider({ children }) {
         })
       })
 
+      // 所要時間より短い候補は消す
+      dayCandidates = dayCandidates.filter(event => event.endAt.add(1, 'second').diff(event.startAt, 'minute') >= requiredTime)
+
       //TODO
-      //所要時間を実装
       //カレンダーの横スクロール
       //カレンダーのイベント重ねる・色変える
       //複数カレンダーの実装
@@ -174,17 +180,21 @@ export function CalendarProvider({ children }) {
 
   return (
     <CalendarContext.Provider value={{
-      candidates: candidates,
-      events: events,
-      days: days,
+      candidates,
+      events,
+      days,
+      requiredTime,
+      gapTime,
       startDate,
       endDate,
       startTime,
       endTime,
-      updateStartDate: updateStartDate,
-      updateEndDate: updateEndDate,
-      updateStartTime: updateStartTime,
-      updateEndTime: updateEndTime
+      updateRequiredTime,
+      updateGapTime,
+      updateStartDate,
+      updateEndDate,
+      updateStartTime,
+      updateEndTime
     }}>
       {children}
     </CalendarContext.Provider>

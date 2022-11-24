@@ -7,18 +7,23 @@ import dayjs from 'dayjs'
 import { useCalendarContext } from '../context/CalendarContext'
 
 const CalendarDetail = () => {
-  const [alignment, setAlignment] = useState('60minutes')
-
   const {
+    requiredTime,
+    gapTime,
     startDate,
     endDate,
     startTime,
     endTime,
+    updateRequiredTime,
+    updateGapTime,
     updateStartDate,
     updateEndDate,
     updateStartTime,
     updateEndTime
   } = useCalendarContext()
+
+  const handleChangeRequiredTime = (_event, value) => value && updateRequiredTime(Number(value))
+  const handleChangeGapTime = (_event, value) => value && updateGapTime(Number(value))
 
   const handleChangeStartDate = value => updateStartDate(value)
   const handleChangeEndDate = value => updateEndDate(value)
@@ -42,11 +47,20 @@ const CalendarDetail = () => {
         </Box>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left', marginTop: '30px' }}>
+          <div style={{fontWeight: 'bold', marginBottom: '10px'}}>所要時間</div>
+          <ToggleButtonGroup value={String(requiredTime)} onChange={handleChangeRequiredTime} exclusive color="primary">
+            <ToggleButton value="30" sx={{width: 'calc(100% / 3)'}}>30分</ToggleButton>
+            <ToggleButton value="60" sx={{width: 'calc(100% / 3)'}}>60分</ToggleButton>
+            <ToggleButton value="90" sx={{width: 'calc(100% / 3)'}}>90分</ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left', marginTop: '30px' }}>
           <div style={{fontWeight: 'bold', marginBottom: '10px'}}>前後の確保時間</div>
-          <ToggleButtonGroup value={alignment} color="primary">
-            <ToggleButton value="30minutes" sx={{width: 'calc(100% / 3)'}}>30分</ToggleButton>
-            <ToggleButton value="60minutes" sx={{width: 'calc(100% / 3)'}}>60分</ToggleButton>
-            <ToggleButton value="90minutes" sx={{width: 'calc(100% / 3)'}}>90分</ToggleButton>
+          <ToggleButtonGroup value={String(gapTime)} onChange={handleChangeGapTime} exclusive color="primary">
+            <ToggleButton value="30" sx={{width: 'calc(100% / 3)'}}>30分</ToggleButton>
+            <ToggleButton value="60" sx={{width: 'calc(100% / 3)'}}>60分</ToggleButton>
+            <ToggleButton value="90" sx={{width: 'calc(100% / 3)'}}>90分</ToggleButton>
           </ToggleButtonGroup>
         </Box>
 
