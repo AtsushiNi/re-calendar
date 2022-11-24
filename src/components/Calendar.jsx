@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Auth, API } from 'aws-amplify'
 import { CircularProgress, Box } from '@mui/material'
 
 import { useAuthContext } from '../context/AuthContext'
@@ -106,9 +105,9 @@ const Calendar = () => {
               <div className="side-column">
                 <div className="side-time-list">
                   {
-                    [...Array(24)].map((_, key) => (
+                    [...Array(17)].map((_, key) => (
                       <div className="side-time" key={key}>
-                        <span>{key}時</span>
+                        <span>{key+7}時</span>
                       </div>
                     ))
                   }
@@ -126,7 +125,7 @@ const Calendar = () => {
                     <div role="row" className="day-columns">
                       <div className="h-borders">
                         {
-                          [...Array(24)].map((_, key) => (<div className="gap-cell" key={key}></div>))
+                          [...Array(17)].map((_, key) => (<div className="gap-cell" key={key}></div>))
                         }
                       </div>
                       <div className="day-column-2"></div>

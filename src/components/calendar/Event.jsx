@@ -2,12 +2,12 @@ const Event = props => {
   const { event } = props
 
   const calculateY = startAt => {
-    return 48/60*(startAt.hour()*60 + startAt.minute()) - 20
+    return 37/60*(startAt.hour()*60 + startAt.minute()) - 20 - 259
   }
 
   const height = (startAt, endAt) => {
-    const startY = 48/60*(startAt.hour()*60 + startAt.minute()) - 20
-    const endY = 48/60*(endAt.hour()*60 + endAt.minute()) - 20
+    const startY = 37/60*(startAt.hour()*60 + startAt.minute())
+    const endY = 37/60*(endAt.hour()*60 + endAt.minute())
     return endY - startY
   }
 

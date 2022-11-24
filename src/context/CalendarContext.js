@@ -160,7 +160,6 @@ export function CalendarProvider({ children }) {
       //カレンダーの横スクロール
       //カレンダーのイベント重ねる・色変える
       //複数カレンダーの実装
-      //カレンダーを8:00~にする
       candidateEvents.push(...dayCandidates)
     })
 

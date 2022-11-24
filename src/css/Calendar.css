@@ -222,7 +222,7 @@ h2.header-day-content {
 
 .side-time {
   position: relative;
-  height: 48px;
+  height: 37px;
   padding-right: 8px;
   text-align: right;
 }
@@ -267,7 +267,7 @@ h2.header-day-content {
 }
 
 .gap-cell {
-  height: 48px;
+  height: 37px;
 }
 
 .gap-cell::after {

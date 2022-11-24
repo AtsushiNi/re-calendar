@@ -74,7 +74,7 @@ const Home = () => {
         </div>
       </header>
 
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', paddingTop: '80px'}}>
         <CalendarProvider>
           <Calendar/>
           <CalendarDetail />

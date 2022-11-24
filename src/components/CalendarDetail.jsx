@@ -35,7 +35,6 @@ const CalendarDetail = () => {
 
   return (
     <div style={{ width: '50%', padding: '20px' }}>
-      <h1>calendar detail</h1>
       <Stack sx={{ width: 5000, maxWidth: '50%', margin: 'auto'}}>
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left', marginTop: '30px' }}>
           <div style={{fontWeight: 'bold', marginBottom: '10px'}}>カレンダー名</div>
