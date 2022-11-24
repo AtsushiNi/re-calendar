@@ -9,7 +9,8 @@
       "UnauthRoleName": "amplify-recalendar-dev-223243-unauthRole",
       "StackName": "amplify-recalendar-dev-223243",
       "StackId": "arn:aws:cloudformation:us-east-1:671620411615:stack/amplify-recalendar-dev-223243/7d781720-6745-11ed-a348-1218334f70d1",
-      "AmplifyAppId": "d2k1b38jqhry6a"
+      "AmplifyAppId": "d2k1b38jqhry6a",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-recalendar-dev-223243-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
@@ -19,6 +20,10 @@
         "eventList": {
           "deploymentBucketName": "amplify-recalendar-dev-223243-deployment",
           "s3Key": "amplify-builds/eventList-77775a6542636963652b-build.zip"
+        },
+        "calendarList": {
+          "deploymentBucketName": "amplify-recalendar-dev-223243-deployment",
+          "s3Key": "amplify-builds/calendarList-724a4e7543516a734d2b-build.zip"
         }
       },
       "api": {

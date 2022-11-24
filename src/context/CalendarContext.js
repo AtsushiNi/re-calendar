@@ -67,10 +67,12 @@ export function CalendarProvider({ children }) {
 
     let result
     try {
+      const res = await API.get("calendarList", "/calendars", myInit)
       result = await API.get("listEvent", "/events", myInit)
+      console.log(res)
     } catch (error) {
       console.log(error)
-      signOut()
+      // signOut()
     }
 
     let googleEvents = result.map(item => {

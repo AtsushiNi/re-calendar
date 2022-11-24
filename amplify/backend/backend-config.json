@@ -33,6 +33,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
       "dependsOn": []
+    },
+    "calendarList": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "api": {
@@ -43,6 +48,14 @@
         {
           "category": "function",
           "resourceName": "eventList",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "calendarList",
           "attributes": [
             "Name",
             "Arn"

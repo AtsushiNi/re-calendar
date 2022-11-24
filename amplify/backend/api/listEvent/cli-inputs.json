@@ -7,6 +7,16 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/calendars": {
+      "name": "/calendars",
+      "lambdaFunction": "calendarList",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "read"
+        ]
+      }
     }
   }
 }
