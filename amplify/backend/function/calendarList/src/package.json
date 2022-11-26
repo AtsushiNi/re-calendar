@@ -6,5 +6,9 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/aws-lambda": "^8.10.92"
+  },
+  "dependencies": {
+    "googleapis": "^109.0.1",
+    "node-jose": "^2.1.1"
   }
 }

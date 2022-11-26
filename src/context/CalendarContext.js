@@ -35,6 +35,7 @@ export function CalendarProvider({ children }) {
   const [startTime, setStartTime] = useState(dayjs().hour(10).minute(0).second(0))
   const [endTime, setEndTime] = useState(dayjs().hour(22).minute(0).second(0))
 
+  const [calendars, setCalendars] = useState([])
   const [candidates, setCandidates] = useState([])
   const [events, setEvents] = useState([])
   const [days, setDays] = useState(defaultDays)
@@ -47,6 +48,7 @@ export function CalendarProvider({ children }) {
 
   // ログイン直後に認証が成功するとカレンダーを読み込む
   useEffect(() => {
+    !!currentUser && getCalendars()
     !!currentUser && getCalendar()
   }, [!!currentUser])
 
@@ -56,6 +58,26 @@ export function CalendarProvider({ children }) {
   const updateEndDate = value => setEndDate(value)
   const updateStartTime = value => setStartTime(value)
   const updateEndTime = value => setEndTime(value)
+
+  const getCalendars = async() => {
+    const token = currentUser.signInUserSession.idToken.jwtToken
+    const myInit = {
+      headers: {
+        Authorization: token
+      }
+    }
+
+    let result
+    try {
+      result = await API.get("calendarList", "/calendars", myInit)
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+      // signOut()
+    }
+
+    setCalendars(result)
+  }
 
   const getCalendar = async() => {
     const token = currentUser.signInUserSession.idToken.jwtToken
@@ -68,7 +90,7 @@ export function CalendarProvider({ children }) {
     let result
     try {
       const res = await API.get("calendarList", "/calendars", myInit)
-      result = await API.get("listEvent", "/events", myInit)
+      result = await API.get("eventList", "/events", myInit)
       console.log(res)
     } catch (error) {
       console.log(error)
@@ -162,6 +184,7 @@ export function CalendarProvider({ children }) {
       //カレンダーの横スクロール
       //カレンダーのイベント重ねる・色変える
       //複数カレンダーの実装
+      //一日の予定は高さを調整する
       candidateEvents.push(...dayCandidates)
     })
 

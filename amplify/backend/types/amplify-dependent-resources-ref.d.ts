@@ -1,6 +1,6 @@
 export type AmplifyDependentResourcesAttributes = {
     "auth": {
-        "recalendar6cdcc831": {
+        "recalendarf855c784": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
             "HostedUIDomain": "string",
@@ -27,7 +27,12 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "api": {
-        "listEvent": {
+        "eventList": {
+            "RootUrl": "string",
+            "ApiName": "string",
+            "ApiId": "string"
+        },
+        "calendarList": {
             "RootUrl": "string",
             "ApiName": "string",
             "ApiId": "string"

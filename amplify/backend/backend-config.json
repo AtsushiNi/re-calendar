@@ -1,6 +1,6 @@
 {
   "auth": {
-    "recalendar6cdcc831": {
+    "recalendarf855c784": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -31,8 +31,7 @@
     "eventList": {
       "build": true,
       "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": []
+      "service": "Lambda"
     },
     "calendarList": {
       "build": true,
@@ -41,7 +40,7 @@
     }
   },
   "api": {
-    "listEvent": {
+    "eventList": {
       "service": "API Gateway",
       "providerPlugin": "awscloudformation",
       "dependsOn": [
@@ -52,7 +51,13 @@
             "Name",
             "Arn"
           ]
-        },
+        }
+      ]
+    },
+    "calendarList": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
         {
           "category": "function",
           "resourceName": "calendarList",

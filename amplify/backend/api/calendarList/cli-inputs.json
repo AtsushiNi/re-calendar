@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/calendars": {
+      "name": "/calendars",
+      "lambdaFunction": "calendarList",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

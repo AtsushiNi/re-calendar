@@ -1,33 +1,33 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-recalendar-dev-223243-authRole",
-      "UnauthRoleArn": "arn:aws:iam::671620411615:role/amplify-recalendar-dev-223243-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::671620411615:role/amplify-recalendar-dev-223243-authRole",
+      "AuthRoleName": "amplify-recalendar-dev-140108-authRole",
+      "UnauthRoleArn": "arn:aws:iam::671620411615:role/amplify-recalendar-dev-140108-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::671620411615:role/amplify-recalendar-dev-140108-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-recalendar-dev-223243-deployment",
-      "UnauthRoleName": "amplify-recalendar-dev-223243-unauthRole",
-      "StackName": "amplify-recalendar-dev-223243",
-      "StackId": "arn:aws:cloudformation:us-east-1:671620411615:stack/amplify-recalendar-dev-223243/7d781720-6745-11ed-a348-1218334f70d1",
-      "AmplifyAppId": "d2k1b38jqhry6a",
-      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-recalendar-dev-223243-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+      "DeploymentBucketName": "amplify-recalendar-dev-140108-deployment",
+      "UnauthRoleName": "amplify-recalendar-dev-140108-unauthRole",
+      "StackName": "amplify-recalendar-dev-140108",
+      "StackId": "arn:aws:cloudformation:us-east-1:671620411615:stack/amplify-recalendar-dev-140108/04349180-6bb5-11ed-98a4-0e5a1ae84d33",
+      "AmplifyAppId": "d2lozvip7wdtez"
     },
     "categories": {
       "auth": {
-        "recalendar6cdcc831": {}
+        "recalendarf855c784": {}
       },
       "function": {
         "eventList": {
-          "deploymentBucketName": "amplify-recalendar-dev-223243-deployment",
-          "s3Key": "amplify-builds/eventList-77775a6542636963652b-build.zip"
+          "deploymentBucketName": "amplify-recalendar-dev-140108-deployment",
+          "s3Key": "amplify-builds/eventList-34686734734370504869-build.zip"
         },
         "calendarList": {
-          "deploymentBucketName": "amplify-recalendar-dev-223243-deployment",
-          "s3Key": "amplify-builds/calendarList-724a4e7543516a734d2b-build.zip"
+          "deploymentBucketName": "amplify-recalendar-dev-140108-deployment",
+          "s3Key": "amplify-builds/calendarList-5777474e68716b316a68-build.zip"
         }
       },
       "api": {
-        "listEvent": {}
+        "eventList": {},
+        "calendarList": {}
       }
     }
   }

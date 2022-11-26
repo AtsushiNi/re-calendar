@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "recalendar6cdcc831_identitypool_6cdcc831",
+    "identityPoolName": "recalendarf855c784_identitypool_f855c784",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "recale6cdcc831",
-    "userPoolName": "recalendar6cdcc831_userpool_6cdcc831",
+    "resourceNameTruncated": "recalef855c784",
+    "userPoolName": "recalendarf855c784_userpool_f855c784",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,17 +31,17 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "recale6cdcc831_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "recalef855c784_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "6cdcc831",
-    "resourceName": "recalendar6cdcc831",
+    "sharedId": "f855c784",
+    "resourceName": "recalendarf855c784",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "defaultSocial",
     "hostedUI": true,
     "usernameAttributes": [
       "email"
     ],
-    "hostedUIDomainName": "recalendar6cdcc831-6cdcc831",
+    "hostedUIDomainName": "recalendarf855c784-f855c784",
     "authProvidersUserPool": [],
     "hostedUIProviderMeta": "[]",
     "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}",
