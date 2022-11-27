@@ -4,9 +4,8 @@
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
 exports.handler = async (event) => {
-    const {google} = require('googleapis');
+    const calendarAPI = require('@googleapis/calendar');
 
-    const AWS = require('aws-sdk')
     const jose = require('node-jose')
 
     try {
@@ -16,7 +15,7 @@ exports.handler = async (event) => {
         payload = JSON.parse(payload)
 
         const googleAccessToken = payload["custom:access_token"]
-        const calendar = google.calendar({
+        const calendar = calendarAPI.calendar({
             version: 'v3',
             headers: {
                 Authorization: `Bearer ${googleAccessToken}`

@@ -12,7 +12,7 @@ const Event = props => {
   }
 
   return (
-    <div role="button" className="event" id="event-4" style={{top: calculateY(event.startAt) + "px", height: height(event.startAt, event.endAt) + "px"}}>
+    <div role="button" className="event" id="event-4" style={{backgroundColor: event.color, borderColor: event.color, top: calculateY(event.startAt) + "px", height: height(event.startAt, event.endAt) + "px"}}>
       <div></div>
       <div className="event-content-wrapper">
         <div className="event-content">

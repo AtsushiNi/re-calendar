@@ -24,6 +24,12 @@ export type AmplifyDependentResourcesAttributes = {
             "Arn": "string",
             "Region": "string",
             "LambdaExecutionRole": "string"
+        },
+        "getCalendars": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
         }
     },
     "api": {
@@ -33,6 +39,11 @@ export type AmplifyDependentResourcesAttributes = {
             "ApiId": "string"
         },
         "calendarList": {
+            "RootUrl": "string",
+            "ApiName": "string",
+            "ApiId": "string"
+        },
+        "getCalendars": {
             "RootUrl": "string",
             "ApiName": "string",
             "ApiId": "string"

@@ -9,6 +9,7 @@ exports.handler = async (event) => {
     const jose = require('node-jose')
 
     try {
+        // Google OAuth2
         const token = event.headers["Authorization"]
         const sections = token.split('.')
         let payload = jose.util.base64url.decode(sections[1])
@@ -22,6 +23,7 @@ exports.handler = async (event) => {
             }
         })
 
+        // 表示中のカレンダー一覧を取得
         const res = await calendar.calendarList.list()
 
         let calendarList = res.data.items.filter(item => item.selected)
@@ -29,8 +31,36 @@ exports.handler = async (event) => {
           return {
             id: item.id,
             summary: item.summary,
-            backgroundColor: item.backgroundColor
+            backgroundColor: item.backgroundColor,
+            foregroundColor: item.foregroundColor,
+            colorId: item.colorId,
+            events: []
           }
+        })
+
+        // それぞれのカレンダーのイベント一覧を取得
+        const now = new Date()
+        const nextWeek = new Date()
+        nextWeek.setDate(now.getDate() + 7)
+
+        let results = []
+        calendarList.forEach(calendarItem => {
+          results.push(
+            calendar.events.list({
+              calendarId: calendarItem.id,
+              timeMin: now.toISOString(),
+              timeMax: nextWeek.toISOString()
+            })
+          )
+        })
+        const result = await Promise.all(results)
+        result.forEach((res, index) => {
+          calendarList[index].events = res.data.items.map(event => {
+              return {
+                  summary: event.summary,
+                  start: event.start,
+                  end: event.end
+          }})
         })
 
         return {

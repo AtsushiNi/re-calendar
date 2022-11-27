@@ -11,7 +11,7 @@ import Event from '../models/Event'
 
 const Calendar = () => {
   const { currentUser, signOut } = useAuthContext()
-  const { days, events } = useCalendarContext()
+  const { days, calendars } = useCalendarContext()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const Calendar = () => {
   }, [])
 
   useEffect(() => {
-    if(events.length) { setLoading(false) }
+    if(!!calendars) { setLoading(false) }
   }, [days])
 
   return (

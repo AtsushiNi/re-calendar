@@ -8,6 +8,7 @@
     "@types/aws-lambda": "^8.10.92"
   },
   "dependencies": {
+    "@googleapis/calendar": "^3.0.0",
     "googleapis": "^109.0.1",
     "node-jose": "^2.1.1"
   }

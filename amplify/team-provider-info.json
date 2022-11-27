@@ -18,16 +18,21 @@
       "function": {
         "eventList": {
           "deploymentBucketName": "amplify-recalendar-dev-140108-deployment",
-          "s3Key": "amplify-builds/eventList-34686734734370504869-build.zip"
+          "s3Key": "amplify-builds/eventList-556e714c7a6247734b4f-build.zip"
         },
         "calendarList": {
           "deploymentBucketName": "amplify-recalendar-dev-140108-deployment",
-          "s3Key": "amplify-builds/calendarList-5777474e68716b316a68-build.zip"
+          "s3Key": "amplify-builds/calendarList-456e53466644424e3037-build.zip"
+        },
+        "getCalendars": {
+          "deploymentBucketName": "amplify-recalendar-dev-140108-deployment",
+          "s3Key": "amplify-builds/getCalendars-31726b31754b50763739-build.zip"
         }
       },
       "api": {
         "eventList": {},
-        "calendarList": {}
+        "calendarList": {},
+        "getCalendars": {}
       }
     }
   }

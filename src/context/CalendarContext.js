@@ -28,6 +28,7 @@ export function CalendarProvider({ children }) {
     }
   })
 
+  const [useCalendarIDs, setUseCalendarIDs] = useState([])
   const [requiredTime, setRequiredTime] = useState(60)
   const [gapTime, setGapTime] = useState(30)
   const [startDate, setStartDate] = useState(dayjs())
@@ -44,12 +45,11 @@ export function CalendarProvider({ children }) {
     createCandidates()
   }, [startTime, endTime, requiredTime, gapTime])
 
-  useEffect(() => createCandidates(), [events])
+  useEffect(() => createCandidates(), [calendars])
 
   // ログイン直後に認証が成功するとカレンダーを読み込む
   useEffect(() => {
     !!currentUser && getCalendars()
-    !!currentUser && getCalendar()
   }, [!!currentUser])
 
   const updateRequiredTime = value => setRequiredTime(value)
@@ -69,87 +69,60 @@ export function CalendarProvider({ children }) {
 
     let result
     try {
-      result = await API.get("calendarList", "/calendars", myInit)
-      console.log(res)
-    } catch (error) {
-      console.log(error)
-      // signOut()
-    }
-
-    setCalendars(result)
-  }
-
-  const getCalendar = async() => {
-    const token = currentUser.signInUserSession.idToken.jwtToken
-    const myInit = {
-      headers: {
-        Authorization: token
-      }
-    }
-
-    let result
-    try {
       const res = await API.get("calendarList", "/calendars", myInit)
-      result = await API.get("eventList", "/events", myInit)
-      console.log(res)
+      result = await API.get("getCalendars", "/calendars", myInit)
     } catch (error) {
       console.log(error)
       // signOut()
     }
 
-    let googleEvents = result.map(item => {
-      let startAt = null
-      let endAt = null
-      if(item.start.date) {
-        startAt = dayjs(item.start.date).startOf('day')
-        endAt = dayjs(item.end.date).subtract(1, 'day').endOf('day')
-      } else {
-        startAt = dayjs(item.start.dateTime)
-        endAt = dayjs(item.end.dateTime)
-      }
-      const title = item.summary
+    result.forEach(calendar => {
+      let googleEvents = calendar.events.map(item => {
+        let startAt = null
+        let endAt = null
+        if(item.start.date) {
+          startAt = dayjs(item.start.date).startOf('day')
+          endAt = dayjs(item.end.date).subtract(1, 'day').endOf('day')
+        } else {
+          startAt = dayjs(item.start.dateTime)
+          endAt = dayjs(item.end.dateTime)
+        }
+        const title = item.summary
 
-      return new Event(title, "", startAt, endAt)
+        return new Event(title, "", startAt, endAt, calendar.colorId)
+      })
+
+      // 複数日にまたがる予定は毎日分Eventを作る
+      googleEvents
+        .filter(event => event.startAt.date() !== event.endAt.date())
+        .forEach(startDateEvent => {
+          // イベント終了日
+          let finishDateEvent = startDateEvent.copy()
+          finishDateEvent.startAt = startDateEvent.endAt.startOf('day')
+          googleEvents.push(finishDateEvent)
+
+          // イベント開始日
+          startDateEvent.startAt.endOf('day')
+
+          // イベント中日
+          let middleDateEvent = startDateEvent.copy()
+          middleDateEvent.startAt = middleDateEvent.startAt.startOf('day')
+          while(true) {
+            middleDateEvent = middleDateEvent.copy()
+            middleDateEvent.startAt = middleDateEvent.startAt.add(1, 'day')
+            middleDateEvent.endAt = middleDateEvent.endAt.add(1, 'day')
+            if (middleDateEvent.startAt.date() === finishDateEvent.startAt.date()) {
+              break
+            }
+            googleEvents.push(middleDateEvent)
+          }
+        })
+
+      calendar.events = googleEvents
     })
 
-    // 複数日にまたがる予定は毎日分Eventを作る
-    googleEvents
-      .filter(event => event.startAt.date() !== event.endAt.date())
-      .forEach(startDateEvent => {
-        // イベント終了日
-        let finishDateEvent = startDateEvent.copy()
-        finishDateEvent.startAt = startDateEvent.endAt.startOf('day')
-        googleEvents.push(finishDateEvent)
-
-        // イベント開始日
-        startDateEvent.startAt.endOf('day')
-
-        // イベント中日
-        let middleDateEvent = startDateEvent.copy()
-        middleDateEvent.startAt = middleDateEvent.startAt.startOf('day')
-        while(true) {
-          middleDateEvent = middleDateEvent.copy()
-          middleDateEvent.startAt = middleDateEvent.startAt.add(1, 'day')
-          middleDateEvent.endAt = middleDateEvent.endAt.add(1, 'day')
-          if (middleDateEvent.startAt.date() === finishDateEvent.startAt.date()) {
-            break
-          }
-          googleEvents.push(middleDateEvent)
-        }
-      })
-
-    setEvents(googleEvents)
-
-    setDays(
-      days.map(day => {
-        const dayGoogleEvents = googleEvents.filter(event => event.startAt.date() === day.dayNumber)
-        const dayCandidates = candidates.filter(event => event.startAt.date() === day.dayNumber)
-        dayGoogleEvents.push(...dayCandidates)
-        return {
-          ...day, events: dayGoogleEvents
-        }
-      })
-    )
+    setCalendars(result)
+    setUseCalendarIDs(result.map(item => item.id))
   }
 
   const createCandidates = () => {
@@ -161,21 +134,25 @@ export function CalendarProvider({ children }) {
       const endAt = startDate.add(i, 'd').hour(endTime.hour()).minute(endTime.minute()).second(0).subtract(1, 's')
 
       let dayCandidates = [new Event("候補", "", startAt, endAt)]
-      events.forEach(googleEvent => {
-        dayCandidates.forEach(candidateEvent => {
-          // googleEventとcandidateEventが被っていたら、candidateEventを削る
-          if(googleEvent.startAt.subtract(gapTime, 'minute').isBefore(candidateEvent.startAt) && googleEvent.endAt.add(gapTime, 'minute').isBetween(candidateEvent.startAt, candidateEvent.endAt)) {
-            candidateEvent.startAt = googleEvent.endAt.add(gapTime, 'minute')
-          } else if(googleEvent.startAt.subtract(gapTime, 'minute').isBetween(candidateEvent.startAt, candidateEvent.endAt) && googleEvent.endAt.add(gapTime, 'minute').isAfter(candidateEvent.endAt)) {
-            candidateEvent.endAt = googleEvent.startAt.subtract(gapTime, 'minute')
-          } else if(googleEvent.startAt.subtract(gapTime, 'minute').isBefore(candidateEvent.startAt) && googleEvent.endAt.add(gapTime, 'minute').isAfter(candidateEvent.endAt)) {
-            dayCandidates = dayCandidates.filter(event => event !== candidateEvent)
-          } else if(googleEvent.startAt.subtract(gapTime, 'minute').isAfter(candidateEvent.startAt) && googleEvent.endAt.add(gapTime, 'minute').isBefore(candidateEvent.endAt)) {
-            dayCandidates.push(new Event("候補", "", googleEvent.endAt.add(gapTime, 'minute') , candidateEvent.endAt.clone()))
-            candidateEvent.endAt = googleEvent.startAt.subtract(gapTime, 'minute')
-          }
+      calendars
+        .filter(item => useCalendarIDs.indexOf(item.id) > -1)
+        .forEach(googleCalendar => {
+          googleCalendar.events.forEach(googleEvent => {
+            dayCandidates.forEach(candidateEvent => {
+              // googleEventとcandidateEventが被っていたら、candidateEventを削る
+              if(googleEvent.startAt.subtract(gapTime, 'minute').isBefore(candidateEvent.startAt) && googleEvent.endAt.add(gapTime, 'minute').isBetween(candidateEvent.startAt, candidateEvent.endAt)) {
+                candidateEvent.startAt = googleEvent.endAt.add(gapTime, 'minute')
+              } else if(googleEvent.startAt.subtract(gapTime, 'minute').isBetween(candidateEvent.startAt, candidateEvent.endAt) && googleEvent.endAt.add(gapTime, 'minute').isAfter(candidateEvent.endAt)) {
+                candidateEvent.endAt = googleEvent.startAt.subtract(gapTime, 'minute')
+              } else if(googleEvent.startAt.subtract(gapTime, 'minute').isBefore(candidateEvent.startAt) && googleEvent.endAt.add(gapTime, 'minute').isAfter(candidateEvent.endAt)) {
+                dayCandidates = dayCandidates.filter(event => event !== candidateEvent)
+              } else if(googleEvent.startAt.subtract(gapTime, 'minute').isAfter(candidateEvent.startAt) && googleEvent.endAt.add(gapTime, 'minute').isBefore(candidateEvent.endAt)) {
+                dayCandidates.push(new Event("候補", "", googleEvent.endAt.add(gapTime, 'minute') , candidateEvent.endAt.clone()))
+                candidateEvent.endAt = googleEvent.startAt.subtract(gapTime, 'minute')
+              }
+            })
+          })
         })
-      })
 
       // 所要時間より短い候補は消す
       dayCandidates = dayCandidates.filter(event => event.endAt.add(1, 'second').diff(event.startAt, 'minute') >= requiredTime)
@@ -192,7 +169,7 @@ export function CalendarProvider({ children }) {
 
     setDays(
       days.map(day => {
-        const dayGoogleEvents = events.filter(event => event.startAt.date() === day.dayNumber)
+        const dayGoogleEvents = calendars.filter(item => useCalendarIDs.indexOf(item.id) > -1).map(item => item.events.filter(event => event.startAt.date() === day.dayNumber)).flat()
         const dayCandidates = candidateEvents.filter(event => event.startAt.date() === day.dayNumber)
         dayCandidates.push(...dayGoogleEvents)
         return {
@@ -204,6 +181,8 @@ export function CalendarProvider({ children }) {
 
   return (
     <CalendarContext.Provider value={{
+      calendars,
+      useCalendarIDs,
       candidates,
       events,
       days,

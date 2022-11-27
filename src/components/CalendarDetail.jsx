@@ -1,13 +1,17 @@
-import { useState } from 'react'
-import { TextField, ToggleButtonGroup, ToggleButton, Box, Stack } from '@mui/material'
+import { useState, useEffect } from 'react'
+import { TextField, ToggleButtonGroup, ToggleButton, Box, Stack, Select, MenuItem, Checkbox, ListItemText, OutlinedInput } from '@mui/material'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker'
 import dayjs from 'dayjs'
 
 import { useCalendarContext } from '../context/CalendarContext'
+import getColor from './Colors'
 
 const CalendarDetail = () => {
   const {
+    calendars,
+    useCalendarIDs,
     requiredTime,
     gapTime,
     startDate,
@@ -22,6 +26,21 @@ const CalendarDetail = () => {
     updateEndTime
   } = useCalendarContext()
 
+  const [useCalendarNames, setUseCalendarNames] = useState([])
+
+  useEffect(() => {
+    !!calendars && !!useCalendarIDs && setUseCalendarNames(calendars.filter(item => useCalendarIDs.indexOf(item.id) > -1).map(item => item.summary))
+  }, [calendars, useCalendarIDs])
+
+  const handleCalendarSelectChange = event => {
+    const {
+      target: { value }
+    } = event
+    setUseCalendarNames(
+      typeof value === 'string' ? value.split(',') : value
+    )
+  }
+
   const handleChangeRequiredTime = (_event, value) => value && updateRequiredTime(Number(value))
   const handleChangeGapTime = (_event, value) => value && updateGapTime(Number(value))
 
@@ -33,6 +52,14 @@ const CalendarDetail = () => {
   const today = (new Date())
   const dayString = today.getFullYear() + '/' + ('0' + (today.getMonth() + 1)).slice(-1) + '/' + ('0' + today.getDay()).slice(-2)
 
+  let themeObject = {palette: {}}
+  !!calendars && calendars.forEach(item => {
+    themeObject.palette[item.id] = {
+      main: getColor(item.colorId)
+    }
+  })
+  const theme = createTheme(themeObject)
+
   return (
     <div style={{ width: '50%', padding: '20px' }}>
       <Stack sx={{ width: 5000, maxWidth: '50%', margin: 'auto'}}>
@@ -43,6 +70,22 @@ const CalendarDetail = () => {
 
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left', marginTop: '30px' }}>
           <div style={{fontWeight: 'bold', marginBottom: '10px'}}>使用するカレンダー</div>
+          <Select
+            multiple
+            value={useCalendarNames}
+            onChange={handleCalendarSelectChange}
+            input={<OutlinedInput />}
+            renderValue={selected => selected.join(',')}
+          >
+            {calendars.map(item => (
+              <MenuItem key={item.summary} value={item.summary}>
+                <ThemeProvider theme={theme}>
+                  <Checkbox checked={useCalendarNames.indexOf(item.summary) > -1} sx={{color: item.backgroundColor}} color={item.id}/>
+                </ThemeProvider>
+                <ListItemText primary={item.summary} />
+              </MenuItem>
+            ))}
+          </Select>
         </Box>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left', marginTop: '30px' }}>
