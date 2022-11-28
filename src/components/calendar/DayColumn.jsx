@@ -7,7 +7,10 @@ dayjs.extend(isSameOrBefore)
 const DayColumn = props => {
   const { events } = props
 
-  events.sort((a, b) => {
+  const alldayEvents = events.filter(event => event.startAt.hour() === 0 && event.startAt.minute() === 0 && event.endAt.hour() === 23 && event.endAt.minute() === 59)
+  const partialEvents = events.filter(event => alldayEvents.indexOf(event) === -1)
+
+  partialEvents.sort((a, b) => {
     if(a.startAt.isBefore(b.startAt)) return -1
     if(a.startAt.isAfter(b.startAt)) return 1
     if(a.endAt.isBefore(b.endAt)) return -1
@@ -17,8 +20,8 @@ const DayColumn = props => {
 
   // eventの重なり表示を計算
   // しっかり重なってる
-  events.forEach(event => {
-    const nowEvents = events.filter(item => item.startAt.isSameOrBefore(event.startAt) && item.endAt.isAfter(event.startAt) && item.startAt.isAfter(event.startAt.subtract(1, 'hour')))
+  partialEvents.forEach(event => {
+    const nowEvents = partialEvents.filter(item => item.startAt.isSameOrBefore(event.startAt) && item.endAt.isAfter(event.startAt) && item.startAt.isAfter(event.startAt.subtract(1, 'hour')))
     nowEvents.forEach((item, index) => {
       const width = 100 / (index + 1)
       if (item.width > width) { item.width = width }
@@ -28,8 +31,8 @@ const DayColumn = props => {
   })
 
   // 表示は重ならないけど時間は被ってる
-  events.forEach(event => {
-    const nowEvents = events.filter(item => item.startAt.isSameOrBefore(event.startAt) && item.endAt.isAfter(event.startAt) && !item.startAt.isAfter(event.startAt.subtract(1, 'hour')))
+  partialEvents.forEach(event => {
+    const nowEvents = partialEvents.filter(item => item.startAt.isSameOrBefore(event.startAt) && item.endAt.isAfter(event.startAt) && !item.startAt.isAfter(event.startAt.subtract(1, 'hour')))
     nowEvents.forEach((item, index) => {
       const width = 100 - index * 5
       if (item.width > width) { item.width = width }
@@ -44,7 +47,7 @@ const DayColumn = props => {
       <div></div>
       <div role="presentation" className="events">
         {
-          events.map((event, key) => <Event event={event} key={key} />)
+          partialEvents.map((event, key) => <Event event={event} key={key} />)
         }
       </div>
     </div>

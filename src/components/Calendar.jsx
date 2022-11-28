@@ -41,6 +41,8 @@ const Calendar = () => {
     if(!!calendars) { setLoading(false) }
   }, [days])
 
+  const alldayEvents = days.map(day => day.events.filter(event => event.startAt.hour() === 0 && event.startAt.minute() === 0 && event.endAt.hour() === 23 && event.endAt.minute() === 59))
+
   return (
     <div role="main">
       <h1 style={{display: "none"}}>xx年xx月xx日の週、xx件の予定</h1>
@@ -55,7 +57,7 @@ const Calendar = () => {
               <div></div>
               <div role="row" className="header-days-row-wrapper">
                 <div role="presentation" className="header-days" key="1">
-                  <div className="header-days-spacer"></div>
+                  <div></div>
                   {
                     days?.map((day, key) => <HeaderDay dayWeek={day.dayWeek} dayNumber={day.dayNumber} key={key}/>)
                   }
@@ -90,8 +92,20 @@ const Calendar = () => {
                   </ul>
                   <div className="long-event-boxes-div">
                     {
-                      [...Array(7)].map((_, key) => (
-                        <div className="long-event-box-div" key={key}></div>
+                      alldayEvents.map((events, key) => (
+                        <div className="long-event-box-div" key={key}>
+                          <div>
+                            {events.map((event, key) => (
+                              <div className="long-event-wrapper" key={key} style={{backgroundColor: event.color}}>
+                                <div className="long-event-content">
+                                  <span style={{whiteSpace: "nowrap"}}>
+                                    {event.title}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       ))
                     }
                   </div>
