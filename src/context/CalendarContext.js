@@ -158,9 +158,9 @@ export function CalendarProvider({ children }) {
 
       //TODO
       //カレンダーの横スクロール
-      //カレンダーのイベント重ねる・色変える
-      //複数カレンダーの実装
-      //一日の予定は高さを調整する
+      //detailの各種コントロール
+      //文字列の出力
+      //候補をクリックで編集
       candidateEvents.push(...dayCandidates)
     })
 

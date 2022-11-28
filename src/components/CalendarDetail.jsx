@@ -53,9 +53,9 @@ const CalendarDetail = () => {
   const dayString = today.getFullYear() + '/' + ('0' + (today.getMonth() + 1)).slice(-1) + '/' + ('0' + today.getDay()).slice(-2)
 
   let themeObject = {palette: {}}
-  !!calendars && calendars.forEach(item => {
+  calendars.length && calendars.forEach(item => {
     themeObject.palette[item.id] = {
-      main: getColor(item.colorId)
+      main: getColor(item.colorId).main
     }
   })
   const theme = createTheme(themeObject)

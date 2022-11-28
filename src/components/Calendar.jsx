@@ -38,7 +38,7 @@ const Calendar = () => {
   }, [])
 
   useEffect(() => {
-    if(!!calendars) { setLoading(false) }
+    if(calendars.length) { setLoading(false) }
   }, [days])
 
   const alldayEvents = days.map(day => day.events.filter(event => event.startAt.hour() === 0 && event.startAt.minute() === 0 && event.endAt.hour() === 23 && event.endAt.minute() === 59))
