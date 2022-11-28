@@ -1,7 +1,7 @@
 .calendar-grid {
   background-color: #fff;
   height: calc(100vh - 90px);
-  width: 715px;
+  width: 900px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -302,8 +302,6 @@ h2.header-day-content {
   width: 100%;
 }
 .event {
-  top: 463px;
-  height: 94px;
   left: calc((100% - 0px) * 0 + 0px);
   width: calc((100% - 0px) * 1);
   z-index: 5;
@@ -326,34 +324,6 @@ h2.header-day-content {
   border-radius: 5px;
   pointer-events: none;
   border: 1px solid #fff;
-}
-#event-1 {
-  top: 455px;
-  height: 46px;
-  left: calc((100% - 0px) * 0 + 0px);
-  width: calc((100% - 0px) * 0.566667);
-  z-index: 5;
-}
-#event-2 {
-  top: 455px;
-  height: 34px;
-  left: calc((100% - 0px) * 0.333333 + 0px);
-  width: calc((100% - 0px) * 0.566667);
-  z-index: 6;
-}
-#event-3 {
-  top: 479px;
-  height: 94px;
-  left: calc((100% - 0px) * 0.666667 + 0px);
-  width: calc((100% - 0px) * 0.333333);
-  z-index: 7;
-}
-#event-4 {
-  top: 503px;
-  height: 46px;
-  left: calc((100% - 0px) * 0 + 0px);
-  width: calc((100% - 0px) * 1);
-  z-index: 5;
 }
 
 .event-content-wrapper {

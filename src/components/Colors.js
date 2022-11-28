@@ -1,5 +1,5 @@
-const getColor = id => {
-  const colors = {
+export const getColor = id => {
+  const mainColors = {
     1: '#795548',
     2: '#e67c73',
     3: '#d50000',
@@ -25,8 +25,32 @@ const getColor = id => {
     23: '#8e24aa',
     24: '#9e69af'
   }
+  const eventColors = {
+    1: '#C9AEA5',
+    2: '#F0B5B1',
+    3: '#FF9E9E',
+    4: '#F9AB94',
+    5: '#FFBB84',
+    6: '#FFD089',
+    7: '#93FFF4',
+    8: '#93F5C1',
+    9: '#C7E0AD',
+    10: '#DFE395',
+    11: '#F0DE98',
+    12: '#F9DA84',
+    13: '#9BE2C1',
+    14: '#81D5FD',
+    15: '#9EC1F9',
+    16: '#A8B1E0',
+    17: '#AEB6DF',
+    18: '#CDBFE7',
+    19: '#C6C6C6',
+    20: '#C6BFB7',
+    21: '#F296BF',
+    22: '#F197B8',
+    23: '#D695E8',
+    24: '#D1B9D9'
+  }
 
-  return colors[id]
+  return {main: mainColors[id], event: eventColors[id]}
 }
-
-export default getColor

@@ -69,7 +69,6 @@ export function CalendarProvider({ children }) {
 
     let result
     try {
-      const res = await API.get("calendarList", "/calendars", myInit)
       result = await API.get("getCalendars", "/calendars", myInit)
     } catch (error) {
       console.log(error)

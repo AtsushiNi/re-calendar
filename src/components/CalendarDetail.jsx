@@ -6,7 +6,7 @@ import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker'
 import dayjs from 'dayjs'
 
 import { useCalendarContext } from '../context/CalendarContext'
-import getColor from './Colors'
+import { getColor } from './Colors'
 
 const CalendarDetail = () => {
   const {
@@ -61,8 +61,8 @@ const CalendarDetail = () => {
   const theme = createTheme(themeObject)
 
   return (
-    <div style={{ width: '50%', padding: '20px' }}>
-      <Stack sx={{ width: 5000, maxWidth: '50%', margin: 'auto'}}>
+    <div style={{ width: '35%', padding: '20px' }}>
+      <Stack sx={{ width: '60%', margin: 'auto'}}>
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left', marginTop: '30px' }}>
           <div style={{fontWeight: 'bold', marginBottom: '10px'}}>カレンダー名</div>
           <TextField defaultValue={dayString + '作成のカレンダー'}/>

@@ -2,17 +2,29 @@ const Event = props => {
   const { event } = props
 
   const calculateY = startAt => {
-    return 37/60*(startAt.hour()*60 + startAt.minute()) - 20 - 259
+    let top = 37/60*(startAt.hour()*60 + startAt.minute()) - 20 - 259
+    return Math.max(top, -20)
   }
 
   const height = (startAt, endAt) => {
-    const startY = 37/60*(startAt.hour()*60 + startAt.minute())
+    const startY = Math.max(37/60*(startAt.hour()*60 + startAt.minute()), 259)
     const endY = 37/60*(endAt.hour()*60 + endAt.minute())
     return endY - startY
   }
 
   return (
-    <div role="button" className="event" id="event-4" style={{backgroundColor: event.color, borderColor: event.color, top: calculateY(event.startAt) + "px", height: height(event.startAt, event.endAt) + "px"}}>
+    <div
+      role="button"
+      className="event"
+      style={{
+        backgroundColor: event.color,
+        borderColor: event.color,
+        top: calculateY(event.startAt) + "px",
+        height: height(event.startAt, event.endAt) - 2 + "px",
+        width: event.width + "%",
+        left: event.left + "%"
+      }}
+    >
       <div></div>
       <div className="event-content-wrapper">
         <div className="event-content">

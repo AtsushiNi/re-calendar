@@ -49,7 +49,8 @@ exports.handler = async (event) => {
             calendar.events.list({
               calendarId: calendarItem.id,
               timeMin: now.toISOString(),
-              timeMax: nextWeek.toISOString()
+              timeMax: nextWeek.toISOString(),
+              singleEvents: true
             })
           )
         })
