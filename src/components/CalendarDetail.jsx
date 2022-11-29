@@ -18,6 +18,7 @@ const CalendarDetail = () => {
     endDate,
     startTime,
     endTime,
+    updateUseCalendarIDs,
     updateRequiredTime,
     updateGapTime,
     updateStartDate,
@@ -36,6 +37,10 @@ const CalendarDetail = () => {
     const {
       target: { value }
     } = event
+
+    const useIds = calendars.filter(item => value.indexOf(item.summary) > -1).map(item => item.id)
+    updateUseCalendarIDs(useIds)
+
     setUseCalendarNames(
       typeof value === 'string' ? value.split(',') : value
     )

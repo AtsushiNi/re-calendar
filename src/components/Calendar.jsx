@@ -11,8 +11,7 @@ import Event from '../models/Event'
 
 const Calendar = () => {
   const { currentUser, signOut } = useAuthContext()
-  const { days, calendars } = useCalendarContext()
-  const [loading, setLoading] = useState(true)
+  const { days, calendars, loading } = useCalendarContext()
 
   useEffect(() => {
     // スクロール同期のCDN
@@ -28,18 +27,13 @@ const Calendar = () => {
     jqueryScript.onload = () => {
       const sideColumn = $(".side-column") // eslint-disable-line
       const scrollWindow = $(".scroll-window") // eslint-disable-line
-      sideColumn.scroll(() => {
-        scrollWindow.scrollTop(sideColumn.scrollTop())
-      })
-      scrollWindow.scroll(() => {
-        sideColumn.scrollTop(scrollWindow.scrollTop())
-      })
+      const header = $(".header-days-wrapper") // eslint-disable-line
+      sideColumn.scroll(() => scrollWindow.scrollTop(sideColumn.scrollTop()))
+      scrollWindow.scroll(() => sideColumn.scrollTop(scrollWindow.scrollTop()))
+      header.scroll(() => scrollWindow.scrollLeft(header.scrollLeft()))
+      scrollWindow.scroll(() => header.scrollLeft(scrollWindow.scrollLeft()))
     }
   }, [])
-
-  useEffect(() => {
-    if(calendars.length) { setLoading(false) }
-  }, [days])
 
   const alldayEvents = days.map(day => day.events.filter(event => event.startAt.hour() === 0 && event.startAt.minute() === 0 && event.endAt.hour() === 23 && event.endAt.minute() === 59))
 
@@ -69,7 +63,7 @@ const Calendar = () => {
                   <div></div>
                   <div className="header-spacer-cells">
                     {
-                      [...Array(7)].map((_, key) => (
+                      [...Array(days.length)].map((_, key) => (
                         <div tabIndex="-1" className="header-spacer-cell" key={key}>
                           <div role="button" className="header-spacer-cell-content">
                           </div>
@@ -85,7 +79,7 @@ const Calendar = () => {
                 <div>
                   <ul>
                     {
-                      [...Array(7)].map((_, key) => (
+                      [...Array(days.length)].map((_, key) => (
                         <li className="long-event-box-li" key={key}></li>
                       ))
                     }

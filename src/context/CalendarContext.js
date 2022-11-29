@@ -17,17 +17,6 @@ export function useCalendarContext() {
 export function CalendarProvider({ children }) {
   const { currentUser, signOut } = useAuthContext()
 
-  const today = dayjs()
-  const defaultDays = [...Array(7)].map((_, i) => {
-    const day = today.add(i, 'day')
-
-    return {
-      dayNumber: day.date(),
-      dayWeek: day.format('ddd'),
-      events: []
-    }
-  })
-
   const [useCalendarIDs, setUseCalendarIDs] = useState([])
   const [requiredTime, setRequiredTime] = useState(60)
   const [gapTime, setGapTime] = useState(30)
@@ -39,19 +28,31 @@ export function CalendarProvider({ children }) {
   const [calendars, setCalendars] = useState([])
   const [candidates, setCandidates] = useState([])
   const [events, setEvents] = useState([])
+
+  const defaultDays = [...Array(endDate.diff(startDate, 'day') + 1)].map((_, i) => {
+    const day = startDate.add(i, 'day')
+    return {
+      dayNumber: day.date(),
+      dayWeek: day.format('ddd'),
+      events: []
+    }
+  })
   const [days, setDays] = useState(defaultDays)
+
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     createCandidates()
-  }, [startTime, endTime, requiredTime, gapTime])
+  }, [useCalendarIDs, startTime, endTime, requiredTime, gapTime])
 
   useEffect(() => createCandidates(), [calendars])
 
   // ログイン直後に認証が成功するとカレンダーを読み込む
   useEffect(() => {
     !!currentUser && getCalendars()
-  }, [!!currentUser])
+  }, [!!currentUser, startDate, endDate])
 
+  const updateUseCalendarIDs = value => setUseCalendarIDs(value)
   const updateRequiredTime = value => setRequiredTime(value)
   const updateGapTime = value => setGapTime(value)
   const updateStartDate = value => setStartDate(value)
@@ -60,10 +61,16 @@ export function CalendarProvider({ children }) {
   const updateEndTime = value => setEndTime(value)
 
   const getCalendars = async() => {
+    setLoading(true)
+
     const token = currentUser.signInUserSession.idToken.jwtToken
     const myInit = {
       headers: {
         Authorization: token
+      },
+      queryStringParameters: {
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString()
       }
     }
 
@@ -122,6 +129,8 @@ export function CalendarProvider({ children }) {
 
     setCalendars(result)
     setUseCalendarIDs(result.map(item => item.id))
+
+    setLoading(false)
   }
 
   const createCandidates = () => {
@@ -166,8 +175,17 @@ export function CalendarProvider({ children }) {
 
     setCandidates(candidateEvents)
 
+    let newDays = [...Array(endDate.diff(startDate, 'day') + 1)].map((_, i) => {
+      const day = startDate.add(i, 'day')
+      return {
+        dayNumber: day.date(),
+        dayWeek: day.format('ddd'),
+        events: []
+      }
+    })
+
     setDays(
-      days.map(day => {
+      newDays.map(day => {
         const dayGoogleEvents = calendars.filter(item => useCalendarIDs.indexOf(item.id) > -1).map(item => item.events.filter(event => event.startAt.date() === day.dayNumber)).flat()
         const dayCandidates = candidateEvents.filter(event => event.startAt.date() === day.dayNumber)
         dayCandidates.push(...dayGoogleEvents)
@@ -191,12 +209,14 @@ export function CalendarProvider({ children }) {
       endDate,
       startTime,
       endTime,
+      updateUseCalendarIDs,
       updateRequiredTime,
       updateGapTime,
       updateStartDate,
       updateEndDate,
       updateStartTime,
-      updateEndTime
+      updateEndTime,
+      loading
     }}>
       {children}
     </CalendarContext.Provider>

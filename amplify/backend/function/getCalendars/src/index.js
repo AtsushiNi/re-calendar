@@ -8,6 +8,7 @@ exports.handler = async (event) => {
 
     const jose = require('node-jose')
 
+    const parameters = event.queryStringParameters
     try {
         // Google OAuth2
         const token = event.headers["Authorization"]
@@ -39,17 +40,22 @@ exports.handler = async (event) => {
         })
 
         // それぞれのカレンダーのイベント一覧を取得
-        const now = new Date()
-        const nextWeek = new Date()
-        nextWeek.setDate(now.getDate() + 7)
+        // lambdaは日本時間が使えないので換算
+        let startDate = new Date((new Date(parameters.startDate)) + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000))
+        startDate.setHours(0,0,0,0)
+        startDate = new Date(startDate - ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000))
+
+        let endDate = new Date((new Date(parameters.endDate)) + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000))
+        endDate.setHours(23,59,59,999)
+        endDate = new Date(endDate - ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000))
 
         let results = []
         calendarList.forEach(calendarItem => {
           results.push(
             calendar.events.list({
               calendarId: calendarItem.id,
-              timeMin: now.toISOString(),
-              timeMax: nextWeek.toISOString(),
+              timeMin: startDate.toISOString(),
+              timeMax: endDate.toISOString(),
               singleEvents: true
             })
           )

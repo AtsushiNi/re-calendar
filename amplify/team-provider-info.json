@@ -26,7 +26,7 @@
         },
         "getCalendars": {
           "deploymentBucketName": "amplify-recalendar-dev-140108-deployment",
-          "s3Key": "amplify-builds/getCalendars-4568624e703944623758-build.zip"
+          "s3Key": "amplify-builds/getCalendars-747457583476634b425a-build.zip"
         }
       },
       "api": {

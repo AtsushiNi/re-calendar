@@ -36,6 +36,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  overflow-x: auto;
   position: relative;
 }
 
@@ -43,14 +44,12 @@
   height: 84px;
   display: flex;
   flex: none;
-  overflow: hidden;
 }
 
 .header-days {
   flex: 1 1 auto;
   display: flex;
-  overflow: hidden;
-  overflow-x: scroll;
+  overflow-x: visible;
 }
 
 .header-day {
@@ -167,7 +166,6 @@ h2.header-day-content {
   min-width: 100%;
   margin: 0;
   position: relative;
-  overflow: hidden;
   font-size: 24px;
 }
 
@@ -182,7 +180,7 @@ h2.header-day-content {
 }
 
 .long-event-wrapper {
-  width: 14.29%;
+  width: 80px;
   top: 0em;
   border-color: rgb(179, 157, 219);
   border-radius: 4px;
@@ -318,7 +316,7 @@ h2.header-day-content {
   flex-shrink: 0;
   border-right: #dadce0 1px solid;
   position: relative;
-  padding-right: 12px;
+  padding-right: 6px;
   box-sizing: border-box;
   flex: 1 1 auto;
   outline: none;
