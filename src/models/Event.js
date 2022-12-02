@@ -1,8 +1,9 @@
 import { getColor, rgbToHsl } from '../components/Colors'
 
 export default class Event {
-  constructor(title, time, startAt, endAt, colorId, left, width) {
+  constructor(title, calendarTitle, time, startAt, endAt, colorId, left, width) {
     this.title = title
+    this.calendarTitle = calendarTitle
     this.time = time
     this.startAt = startAt
     this.endAt = endAt
@@ -14,6 +15,7 @@ export default class Event {
   copy() {
     return new Event(
       this.title,
+      this.calendarTitle,
       this.time,
       this.startAt.clone(),
       this.endAt.clone(),

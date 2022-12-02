@@ -95,7 +95,7 @@ export function CalendarProvider({ children }) {
         }
         const title = item.summary
 
-        return new Event(title, "", startAt, endAt, calendar.colorId)
+        return new Event(title, calendar.summary, "", startAt, endAt, calendar.colorId)
       })
 
       // 複数日にまたがる予定は毎日分Eventを作る
@@ -141,7 +141,7 @@ export function CalendarProvider({ children }) {
       const startAt = startDate.add(i, 'd').hour(startTime.hour()).minute(startTime.minute()).second(0)
       const endAt = startDate.add(i, 'd').hour(endTime.hour()).minute(endTime.minute()).second(0).subtract(1, 's')
 
-      let dayCandidates = [new Event("候補", "", startAt, endAt)]
+      let dayCandidates = [new Event("候補", "re-calendar", "", startAt, endAt)]
       calendars
         .filter(item => useCalendarIDs.indexOf(item.id) > -1)
         .forEach(googleCalendar => {
@@ -155,7 +155,7 @@ export function CalendarProvider({ children }) {
               } else if(googleEvent.startAt.subtract(gapTime, 'minute').isBefore(candidateEvent.startAt) && googleEvent.endAt.add(gapTime, 'minute').isAfter(candidateEvent.endAt)) {
                 dayCandidates = dayCandidates.filter(event => event !== candidateEvent)
               } else if(googleEvent.startAt.subtract(gapTime, 'minute').isAfter(candidateEvent.startAt) && googleEvent.endAt.add(gapTime, 'minute').isBefore(candidateEvent.endAt)) {
-                dayCandidates.push(new Event("候補", "", googleEvent.endAt.add(gapTime, 'minute') , candidateEvent.endAt.clone()))
+                dayCandidates.push(new Event("候補", "re-calendar", "", googleEvent.endAt.add(gapTime, 'minute') , candidateEvent.endAt.clone()))
                 candidateEvent.endAt = googleEvent.startAt.subtract(gapTime, 'minute')
               }
             })
@@ -166,8 +166,6 @@ export function CalendarProvider({ children }) {
       dayCandidates = dayCandidates.filter(event => event.endAt.add(1, 'second').diff(event.startAt, 'minute') >= requiredTime)
 
       //TODO
-      //カレンダーの横スクロール
-      //detailの各種コントロール
       //文字列の出力
       //候補をクリックで編集
       candidateEvents.push(...dayCandidates)

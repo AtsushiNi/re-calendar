@@ -113,7 +113,7 @@ const CalendarDetail = () => {
 
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'left', marginTop: '30px' }}>
           <div style={{fontWeight: 'bold', marginBottom: '10px'}}>候補日程</div>
-          <Box sx={{display: 'flex'}}>
+          <Box sx={{display: 'flex', alignItems: "center"}}>
             <DesktopDatePicker
               inputFormat="MM/DD/YYYY"
               value={startDate}
@@ -132,7 +132,7 @@ const CalendarDetail = () => {
 
         <Box sx={{ textAlign: 'left', marginTop: '30px' }}>
           <div style={{fontWeight: 'bold', marginBottom: '10px'}}>候補時間</div>
-          <Box sx={{display: 'flex'}}>
+          <Box sx={{display: 'flex', alignItems: "center"}}>
             <MobileTimePicker
               value={startTime}
               onChange={handleChangeStartTime}
