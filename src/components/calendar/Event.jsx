@@ -12,8 +12,14 @@ const Event = props => {
 
   const [anchorEl, setAnchorEl] = useState(null)
 
-  const handleOpenModal = event => setAnchorEl(event.currentTarget)
-  const handleCloseModal = () => setAnchorEl(null)
+  const handleOpenModal = clickEvent => {
+    if(event.calendarTitle === "re-calendar") clickEvent.stopPropagation()
+    setAnchorEl(clickEvent.currentTarget)
+  }
+  const handleCloseModal = clickEvent => {
+    if(event.calendarTitle === "re-calendar") clickEvent.stopPropagation()
+    setAnchorEl(null)
+  }
   const open = Boolean(anchorEl)
 
   const theme = createTheme({
@@ -77,7 +83,7 @@ const Event = props => {
         </div>
         {(event.calendarTitle === "re-calendar") && (
           <Popover
-            open={Boolean(anchorEl)}
+            open={open}
             anchorEl={anchorEl}
             onClose={handleCloseModal}
             anchorOrigin={{
