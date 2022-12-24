@@ -49,9 +49,6 @@ const Home = () => {
           </a>
           <nav>
             <ul>
-              <li>item1</li>
-              <li>item2</li>
-              <li>item3</li>
               <Button
                 aria-controls={open ? 'menu' : undefined}
                 aria-expanded={open ? 'true' : undefined}

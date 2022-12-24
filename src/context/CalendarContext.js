@@ -7,6 +7,7 @@ import Event from '../models/Event'
 import { useAuthContext } from './AuthContext'
 
 dayjs.locale('ja')
+dayjs.extend(require('dayjs/plugin/isSameOrAfter'))
 
 const CalendarContext = createContext({ candidates: [] })
 
@@ -140,24 +141,40 @@ export function CalendarProvider({ children }) {
     const diff = endDate.diff(startDate, 'day') + 1
 
     let candidateEvents = [];
+    let dayCandidates = [];
     [...Array(diff)].map((_, i) => {
       const startAt = startDate.add(i, 'd').hour(startTime.hour()).minute(startTime.minute()).second(0)
       const endAt = startDate.add(i, 'd').hour(endTime.hour()).minute(endTime.minute()).second(0).subtract(1, 's')
 
-      let dayCandidates = [new Event("候補", "re-calendar", "", startAt, endAt)]
+      dayCandidates = [new Event("候補", "re-calendar", "", startAt, endAt)]
       calendars
         .filter(item => useCalendarIDs.indexOf(item.id) > -1)
         .forEach(googleCalendar => {
           googleCalendar.events.forEach(googleEvent => {
             dayCandidates.forEach(candidateEvent => {
               // googleEventとcandidateEventが被っていたら、candidateEventを削る
-              if(googleEvent.startAt.subtract(gapTime, 'minute').isBefore(candidateEvent.startAt) && googleEvent.endAt.add(gapTime, 'minute').isBetween(candidateEvent.startAt, candidateEvent.endAt)) {
+              if(
+                googleEvent.startAt.subtract(gapTime, 'minute').isSameOrBefore(candidateEvent.startAt)
+                  && googleEvent.endAt.add(gapTime, 'minute').isBetween(candidateEvent.startAt, candidateEvent.endAt, null, '[]')
+              ) {
                 candidateEvent.startAt = googleEvent.endAt.add(gapTime, 'minute')
-              } else if(googleEvent.startAt.subtract(gapTime, 'minute').isBetween(candidateEvent.startAt, candidateEvent.endAt) && googleEvent.endAt.add(gapTime, 'minute').isAfter(candidateEvent.endAt)) {
+
+              } else if(
+                googleEvent.startAt.subtract(gapTime, 'minute').isBetween(candidateEvent.startAt, candidateEvent.endAt, null, '()')
+                  && googleEvent.endAt.add(gapTime, 'minute').isSameOrAfter(candidateEvent.endAt)
+              ) {
                 candidateEvent.endAt = googleEvent.startAt.subtract(gapTime, 'minute')
-              } else if(googleEvent.startAt.subtract(gapTime, 'minute').isBefore(candidateEvent.startAt) && googleEvent.endAt.add(gapTime, 'minute').isAfter(candidateEvent.endAt)) {
+
+              } else if(
+                googleEvent.startAt.subtract(gapTime, 'minute').isSameOrBefore(candidateEvent.startAt)
+                  && googleEvent.endAt.add(gapTime, 'minute').isSameOrAfter(candidateEvent.endAt)
+              ) {
                 dayCandidates = dayCandidates.filter(event => event !== candidateEvent)
-              } else if(googleEvent.startAt.subtract(gapTime, 'minute').isAfter(candidateEvent.startAt) && googleEvent.endAt.add(gapTime, 'minute').isBefore(candidateEvent.endAt)) {
+
+              } else if(
+                googleEvent.startAt.subtract(gapTime, 'minute').isAfter(candidateEvent.startAt)
+                  && googleEvent.endAt.add(gapTime, 'minute').isBefore(candidateEvent.endAt)
+              ) {
                 dayCandidates.push(new Event("候補", "re-calendar", "", googleEvent.endAt.add(gapTime, 'minute') , candidateEvent.endAt.clone()))
                 candidateEvent.endAt = googleEvent.startAt.subtract(gapTime, 'minute')
               }
