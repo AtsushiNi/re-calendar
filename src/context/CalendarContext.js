@@ -168,9 +168,6 @@ export function CalendarProvider({ children }) {
       // 所要時間より短い候補は消す
       dayCandidates = dayCandidates.filter(event => event.endAt.add(1, 'second').diff(event.startAt, 'minute') >= requiredTime)
 
-      //TODO
-      //文字列の出力
-      //候補をクリックで編集
       candidateEvents.push(...dayCandidates)
     })
 
