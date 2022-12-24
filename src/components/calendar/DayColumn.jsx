@@ -15,9 +15,16 @@ const DayColumn = props => {
   const { events } = props
 
   const [anchorEl, setAnchorEl] = useState(null)
-  const [newEvent, setNewEvent] = useState(new EventModel("候補", "re-calendar", "", dayjs(), dayjs().add(1, "hour")))
+  const [newEvent, setNewEvent] = useState(null)
 
-  const handleOpenModal = event => setAnchorEl(event.currentTarget)
+  const handleOpenModal = clickEvent => {
+    setAnchorEl(clickEvent.currentTarget)
+    const startAt = Math.trunc((clickEvent.pageY - clickEvent.target.getBoundingClientRect().top)/37) + 7
+    const event = new EventModel("候補", "re-calendar", "", dayjs(), dayjs().add(1, "hour"))
+    event.startAt = event.startAt.hour(startAt).startOf('hour')
+    event.endAt = event.startAt.add(2, 'hour')
+    setNewEvent(event)
+  }
   const handleCloseModal = event => setAnchorEl(null)
   const open = Boolean(anchorEl)
 
@@ -30,7 +37,8 @@ const DayColumn = props => {
   })
 
   const alldayEvents = events.filter(event => event.startAt.hour() === 0 && event.startAt.minute() === 0 && event.endAt.hour() === 23 && event.endAt.minute() === 59)
-  const partialEvents = events.filter(event => alldayEvents.indexOf(event) === -1)
+  let partialEvents = events.filter(event => alldayEvents.indexOf(event) === -1)
+  newEvent && partialEvents.push(newEvent)
 
   partialEvents.sort((a, b) => {
     if(a.startAt.isBefore(b.startAt)) return -1
@@ -70,8 +78,6 @@ const DayColumn = props => {
         className="day-column"
         onClick={handleOpenModal}
         >
-        <h2></h2>
-        <div></div>
         <div role="presentation" className="events">
           {
             partialEvents.map((event, key) => <Event event={event} key={key} />)
@@ -89,37 +95,39 @@ const DayColumn = props => {
           }}
         >
           <Card>
-            <CardContent>
-              <Typography variant="h5" sx={{marginBottom: "20px"}}>
-                <CircleIcon sx={{color: newEvent.color, marginRight: '5px'}}/>
-                "候補"
-              </Typography>
-              <div style={{display: "flex", marginBottom: "15px"}}>
-                <div style={{display: "inline-block", width: "24px", marginRight: '5px'}}></div>
-                <div style={{display: "flex", alignItems: "center"}}>
-                  <Typography sx={{marginRight: "5px"}}>
-                    {newEvent.startAt.format('DD/MM (ddd)')}
-                  </Typography>
-                  <MobileTimePicker
-                    value={newEvent.startAt}
-                    onChange={() => console.log('')}
-                    renderInput={params => <TextField sx={{'& .MuiInputBase-input': {paddingTop: '5px', paddingBottom: '5px', width: "100px"}}} {...params}/>}
-                  />
-                  ~
-                  <MobileTimePicker
-                    value={newEvent.endAt}
-                    onChange={() => console.log('')}
-                    renderInput={params => <TextField sx={{'& .MuiInputBase-input': {paddingTop: '5px', paddingBottom: '5px', width: "100px"}}} {...params}/>}
-                  />
-                </div>
-              </div>
-              <div style={{display: "flex"}}>
-                <CalendarMonthIcon color="grey" sx={{marginRight: "5px"}}/>
-                <Typography color="grey">
-                  {newEvent.calendarTitle}
+            {newEvent &&
+              <CardContent>
+                <Typography variant="h5" sx={{marginBottom: "20px"}}>
+                  <CircleIcon sx={{color: newEvent.color, marginRight: '5px'}}/>
+                  "候補"
                 </Typography>
-              </div>
-            </CardContent>
+                <div style={{display: "flex", marginBottom: "15px"}}>
+                  <div style={{display: "inline-block", width: "24px", marginRight: '5px'}}></div>
+                  <div style={{display: "flex", alignItems: "center"}}>
+                    <Typography sx={{marginRight: "5px"}}>
+                      {newEvent.startAt.format('DD/MM (ddd)')}
+                    </Typography>
+                    <MobileTimePicker
+                      value={newEvent.startAt}
+                      onChange={() => console.log('')}
+                      renderInput={params => <TextField sx={{'& .MuiInputBase-input': {paddingTop: '5px', paddingBottom: '5px', width: "100px"}}} {...params}/>}
+                    />
+                    ~
+                    <MobileTimePicker
+                      value={newEvent.endAt}
+                      onChange={() => console.log('')}
+                      renderInput={params => <TextField sx={{'& .MuiInputBase-input': {paddingTop: '5px', paddingBottom: '5px', width: "100px"}}} {...params}/>}
+                    />
+                  </div>
+                </div>
+                <div style={{display: "flex"}}>
+                  <CalendarMonthIcon color="grey" sx={{marginRight: "5px"}}/>
+                  <Typography color="grey">
+                    {newEvent.calendarTitle}
+                  </Typography>
+                </div>
+              </CardContent>
+            }
             <CardActions sx={{justifyContent: "end"}}>
               <Button color="calendar">close</Button>
               {/* <Button color="calendar"onClick={handleCloseModal}>OK</Button> */}

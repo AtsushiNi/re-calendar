@@ -34,7 +34,7 @@ const Event = props => {
   })
 
   const calculateY = startAt => {
-    let top = 37/60*(startAt.hour()*60 + startAt.minute()) - 20 - 259
+    let top = 37/60*(startAt.hour()*60 + startAt.minute()) - 259
     return Math.max(top, -20)
   }
 
