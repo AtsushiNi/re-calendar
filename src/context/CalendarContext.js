@@ -47,6 +47,9 @@ export function CalendarProvider({ children }) {
 
   useEffect(() => createCandidates(), [calendars])
 
+  // 候補が変わると表示されるイベントリストを更新する
+  useEffect(() => createDays(), [candidates])
+
   // ログイン直後に認証が成功するとカレンダーを読み込む
   useEffect(() => {
     !!currentUser && getCalendars()
@@ -172,26 +175,33 @@ export function CalendarProvider({ children }) {
     })
 
     setCandidates(candidateEvents)
+  }
 
+  const createDays = () => {
+    const diff = endDate.diff(startDate, 'day') + 1
     let newDays = [...Array(endDate.diff(startDate, 'day') + 1)].map((_, i) => {
       const day = startDate.add(i, 'day')
       return {
+        dayObject: day,
         dayNumber: day.date(),
         dayWeek: day.format('ddd'),
         events: []
       }
     })
 
-    setDays(
-      newDays.map(day => {
-        const dayGoogleEvents = calendars.filter(item => useCalendarIDs.indexOf(item.id) > -1).map(item => item.events.filter(event => event.startAt.date() === day.dayNumber)).flat()
-        const dayCandidates = candidateEvents.filter(event => event.startAt.date() === day.dayNumber)
-        dayCandidates.push(...dayGoogleEvents)
-        return {
-          ...day, events: dayCandidates
-        }
-      })
-    )
+    newDays.forEach(day => {
+      const dayGoogleEvents = calendars.filter(item => useCalendarIDs.indexOf(item.id) > -1).map(item => item.events.filter(event => event.startAt.date() === day.dayNumber)).flat()
+      const dayCandidates = candidates.filter(event => event.startAt.date() === day.dayNumber)
+      dayCandidates.push(...dayGoogleEvents)
+
+      day.events = dayCandidates
+    })
+
+    setDays(newDays)
+  }
+
+  const appendCandidate = newEvent => {
+    setCandidates(prevCandidates => [...prevCandidates, newEvent])
   }
 
   return (
@@ -214,7 +224,8 @@ export function CalendarProvider({ children }) {
       updateEndDate,
       updateStartTime,
       updateEndTime,
-      loading
+      loading,
+      appendCandidate
     }}>
       {children}
     </CalendarContext.Provider>

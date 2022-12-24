@@ -138,7 +138,7 @@ const Calendar = () => {
                       </div>
                       <div className="day-column-2"></div>
                       {
-                        days.map((day, key) => <DayColumn events={day.events} key={key} />)
+                        days.map((day, key) => <DayColumn events={day.events} day={day.dayObject} key={key} />)
                       }
                     </div>
                   )

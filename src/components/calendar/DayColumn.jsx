@@ -8,24 +8,37 @@ import dayjs from 'dayjs'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import Event from './Event'
 import {default as EventModel } from '../../models/Event'
+import { useCalendarContext } from '../../context/CalendarContext'
 
 dayjs.extend(isSameOrBefore)
 
 const DayColumn = props => {
-  const { events } = props
+  const { appendCandidate } = useCalendarContext()
+  const { events, day } = props
 
   const [anchorEl, setAnchorEl] = useState(null)
   const [newEvent, setNewEvent] = useState(null)
+  const [isTmpNewEvent, setIsTmpNewEvent] = useState(true) // 作成モーダルを開いてすぐ閉じると、候補イベントは作成されずにモーダルが閉じる
 
   const handleOpenModal = clickEvent => {
     setAnchorEl(clickEvent.currentTarget)
     const startAt = Math.trunc((clickEvent.pageY - clickEvent.target.getBoundingClientRect().top)/37) + 7
-    const event = new EventModel("候補", "re-calendar", "", dayjs(), dayjs().add(1, "hour"))
+    const event = new EventModel("候補", "re-calendar", "", day.clone(), day.clone())
     event.startAt = event.startAt.hour(startAt).startOf('hour')
     event.endAt = event.startAt.add(2, 'hour')
     setNewEvent(event)
   }
-  const handleCloseModal = event => setAnchorEl(null)
+
+  const handleCloseModal = event => {
+    if(!isTmpNewEvent) { appendCandidate(newEvent) }
+    setAnchorEl(null)
+    setNewEvent(null)
+  }
+  const handleClickOKButton = event => {
+    appendCandidate(newEvent)
+    setAnchorEl(null)
+    setNewEvent(null)
+  }
   const open = Boolean(anchorEl)
 
   const theme = createTheme({
@@ -35,6 +48,20 @@ const DayColumn = props => {
       }
     }
   })
+
+  const handleChangeStartAt = newValue => {
+    let event = newEvent.copy()
+    event.startAt = newValue
+    setIsTmpNewEvent(false)
+    setNewEvent(event)
+  }
+
+  const handleChangeEndAt = newValue => {
+    let event = newEvent.copy()
+    event.endAt = newValue
+    setIsTmpNewEvent(false)
+    setNewEvent(event)
+  }
 
   const alldayEvents = events.filter(event => event.startAt.hour() === 0 && event.startAt.minute() === 0 && event.endAt.hour() === 23 && event.endAt.minute() === 59)
   let partialEvents = events.filter(event => alldayEvents.indexOf(event) === -1)
@@ -109,13 +136,13 @@ const DayColumn = props => {
                     </Typography>
                     <MobileTimePicker
                       value={newEvent.startAt}
-                      onChange={() => console.log('')}
+                      onChange={handleChangeStartAt}
                       renderInput={params => <TextField sx={{'& .MuiInputBase-input': {paddingTop: '5px', paddingBottom: '5px', width: "100px"}}} {...params}/>}
                     />
                     ~
                     <MobileTimePicker
                       value={newEvent.endAt}
-                      onChange={() => console.log('')}
+                      onChange={handleChangeEndAt}
                       renderInput={params => <TextField sx={{'& .MuiInputBase-input': {paddingTop: '5px', paddingBottom: '5px', width: "100px"}}} {...params}/>}
                     />
                   </div>
@@ -129,8 +156,8 @@ const DayColumn = props => {
               </CardContent>
             }
             <CardActions sx={{justifyContent: "end"}}>
-              <Button color="calendar">close</Button>
-              {/* <Button color="calendar"onClick={handleCloseModal}>OK</Button> */}
+              <Button color="calendar" onClick={handleCloseModal}>close</Button>
+              <Button color="calendar"onClick={handleClickOKButton}>OK</Button>
             </CardActions>
           </Card>
         </Popover>

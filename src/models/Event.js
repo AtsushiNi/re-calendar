@@ -7,6 +7,7 @@ export default class Event {
     this.time = time
     this.startAt = startAt
     this.endAt = endAt
+    this.colorId = colorId
     this.color = colorId ? getColor(colorId).event : "#26A69A"
     this.left = 0 // px
     this.width = 100 // %
@@ -19,7 +20,9 @@ export default class Event {
       this.time,
       this.startAt.clone(),
       this.endAt.clone(),
-      this.color
+      this.colorId,
+      this.left,
+      this.width
     )
   }
 }
